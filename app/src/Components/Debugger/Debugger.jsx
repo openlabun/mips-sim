@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './Debugger.css';
 const Debugger = ({ PC, mipsInput, stepMIPS, stepBackMIPS, resetMIPS }) => {
   const instructions = mipsInput.trim().split('\n');
 

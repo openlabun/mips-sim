@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './SimulationTables.css';
 const SimulationTables = ({ registers, memory }) => {
   return (
     <div id="simulation-tables">

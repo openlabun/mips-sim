@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Debugger from './Components/Debugger';
-import DropArea from './Components/DropArea';
-import SimulationTables from './Components/SimulationTables';
+import { Debugger } from './Components';
+import { DropArea } from './Components';
+import { SimulationTables } from './Components';
+
+
 
 const initialRegisters = {
     zero: 0, at: 0, v0: 0, v1: 0,
@@ -25,8 +27,8 @@ const MIPSApp = () => {
     const [history, setHistory] = useState([]);
 
     const updateTables = (newRegisters, newMemory) => {
-        setRegisters({ ...newRegisters });
-        setMemory({ ...newMemory });
+        setRegisters(newRegisters);
+        setMemory(newMemory);
     };
 
     const simulateMIPS = () => {
@@ -35,8 +37,8 @@ const MIPSApp = () => {
         const hexInstructions = mipsInput.trim().split('\n');
         resetMIPS();
 
-        const newRegisters = { ...registers };
-        const newMemory = { ...memory };
+        const newRegisters = { ...initialRegisters };
+        const newMemory = { ...initialMemory };
 
         hexInstructions.forEach(instruction => {
             executeMIPSInstruction(instruction, newRegisters, newMemory);
@@ -76,10 +78,6 @@ const MIPSApp = () => {
         setRegisters(initialRegisters);
         setMemory(initialMemory);
     };
-
-    useEffect(() => {
-        updateTables(registers, memory);
-    }, [registers, memory]);
 
     return (
         <div>
