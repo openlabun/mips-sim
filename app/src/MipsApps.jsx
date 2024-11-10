@@ -15,6 +15,7 @@ const initialRegisters = {
 };
 
 const initialMemory = Array.from({ length: 32 }).reduce((acc, curr, i) => ({ ...acc, [i]: 0 }), {});
+
 const MIPSApp = () => {
     const [mipsInput, setMipsInput] = useState('');
     const [hexInput, setHexInput] = useState('');
@@ -22,42 +23,50 @@ const MIPSApp = () => {
     const [memory, setMemory] = useState(initialMemory);
     const [PC, setPC] = useState(0);
     const [history, setHistory] = useState([]);
-    const [isHighlight, setIsHighlight] = useState(false);
 
-
-
-
-
-    useEffect(() => {
-        updateDebuggerInfo();
-    }, [PC]);
+    const updateTables = (newRegisters, newMemory) => {
+        setRegisters({ ...newRegisters });
+        setMemory({ ...newMemory });
+    };
 
     const simulateMIPS = () => {
-        // Scroll to the simulation tables
         document.getElementById('simulation-tables').scrollIntoView({ behavior: 'smooth' });
 
         const hexInstructions = mipsInput.trim().split('\n');
         resetMIPS();
 
+        const newRegisters = { ...registers };
+        const newMemory = { ...memory };
+
         hexInstructions.forEach(instruction => {
-            executeMIPSInstruction(instruction, registers, memory);
+            executeMIPSInstruction(instruction, newRegisters, newMemory);
         });
 
-        updateTables(registers, memory);
+        updateTables(newRegisters, newMemory);
     };
 
-    const executeMIPSInstruction = (instruction, registers, memory) => {
-        const [op, ...operands] = instruction.split(' ');
-        switch (op) {
-            // Implementar lógica de instrucciones MIPS aquí
-            case 'add':
-                const [rd, rs, rt] = operands;
-                registers[rd] = registers[rs] + registers[rt];
-                break;
-            // Otros casos...
-            default:
-                console.error('Unsupported operation:', op);
-                break;
+    const stepMIPS = () => {
+        const instructions = mipsInput.trim().split('\n');
+        if (PC >= instructions.length) return;
+
+        setHistory([...history, { PC, registers: { ...registers }, memory: { ...memory } }]);
+        const newRegisters = { ...registers };
+        const newMemory = { ...memory };
+        executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
+
+        setPC(PC + 1);
+        updateTables(newRegisters, newMemory);
+    };
+
+    const stepBackMIPS = () => {
+        if (PC === 0) return;
+
+        const lastState = history.pop();
+        if (lastState) {
+            setPC(lastState.PC);
+            setRegisters(lastState.registers);
+            setMemory(lastState.memory);
+            setHistory(history.slice(0, -1));
         }
     };
 
@@ -68,24 +77,75 @@ const MIPSApp = () => {
         setMemory(initialMemory);
     };
 
-    const updateTables = (registers, memory) => {
-        // Lógica para actualizar las tablas con los valores de registros y memoria
-    };
-
-    const updateDebuggerInfo = () => {
-        // Lógica para actualizar la información del depurador
-    };
+    useEffect(() => {
+        updateTables(registers, memory);
+    }, [registers, memory]);
 
     return (
         <div>
             <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
             <textarea id="mips-input" value={mipsInput} onChange={(e) => setMipsInput(e.target.value)} />
-            <textarea id="hex-input" value={hexInput} onChange={(e) => setHexInput(e.target.value)} />
             <button id="simulate-mips-button" onClick={simulateMIPS}>Simulate MIPS</button>
             <SimulationTables registers={registers} memory={memory} />
-            <Debugger PC={PC} mipsInput={mipsInput} />
+            <Debugger PC={PC} mipsInput={mipsInput} stepMIPS={stepMIPS} stepBackMIPS={stepBackMIPS} resetMIPS={resetMIPS} />
         </div>
     );
+};
+
+const executeMIPSInstruction = (instruction, registers, memory) => {
+    const [op, ...operands] = instruction.split(' ');
+    switch (op) {
+        case 'add': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] + registers[rt];
+            break;
+        }
+        case 'sub': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] - registers[rt];
+            break;
+        }
+        case 'slt': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
+            break;
+        }
+        case 'and': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] & registers[rt];
+            break;
+        }
+        case 'or': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] | registers[rt];
+            break;
+        }
+        case 'addi': {
+            const [rd, rs, immediate] = operands;
+            registers[rd] = registers[rs] + parseInt(immediate);
+            break;
+        }
+        case 'lw': {
+            const [rt, offset] = operands;
+            const address = parseInt(offset, 16);
+            if (memory.hasOwnProperty(address)) {
+                registers[rt] = memory[address];
+            } else {
+                console.error('Memory address not found:', address);
+            }
+            break;
+        }
+        case 'sw': {
+            const [rt, offset] = operands;
+            const address = parseInt(offset, 16);
+            memory[address] = registers[rt];
+            break;
+        }
+        default: {
+            console.error('Unsupported operation:', op);
+            break;
+        }
+    }
 };
 
 export default MIPSApp;

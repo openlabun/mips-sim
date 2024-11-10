@@ -1,10 +1,6 @@
 import React from 'react';
 
 const SimulationTables = ({ registers, memory }) => {
-  const updateTables = () => {
-    // Lógica para actualizar las tablas con los valores de registros y memoria
-  };
-
   return (
     <div id="simulation-tables">
       <table id="registerTable">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { translateInstructionToHex } from '../utils/TranslatorFunctions';
+import { translateInstructionToMIPS } from '../utils/TranslatorFunctions';
 
 const DropArea = ({ setMipsInput, setHexInput }) => {
   const [isHighlight, setIsHighlight] = useState(false);

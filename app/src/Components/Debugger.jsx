@@ -1,13 +1,19 @@
 import React from 'react';
 
-const Debugger = ({ PC, mipsInput }) => {
+const Debugger = ({ PC, mipsInput, stepMIPS, stepBackMIPS, resetMIPS }) => {
   const instructions = mipsInput.trim().split('\n');
 
   return (
-    <div id="debugger-info">
-      <p>PC: {PC}</p>
-      <p>Current instruction: {instructions[PC] ?? null}</p>
-      <p>Previous instruction: {instructions[PC - 1] ?? null}</p>
+    <div id="debugger">
+      <h2>Debugger</h2>
+      <button onClick={stepMIPS}>Step In</button>
+      <button onClick={stepBackMIPS}>Step Back</button>
+      <button onClick={resetMIPS}>Reset</button>
+      <div id="debugger-info">
+        <p>PC: {PC}</p>
+        <p>Current instruction: {instructions[PC] ?? 'N/A'}</p>
+        <p>Previous instruction: {instructions[PC - 1] ?? 'N/A'}</p>
+      </div>
     </div>
   );
 };
