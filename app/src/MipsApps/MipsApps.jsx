@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Debugger } from './Components';
-import { DropArea } from './Components';
-import { SimulationTables } from './Components';
+import { Debugger } from '../Components';
+import { DropArea } from '../Components';
+import { SimulationTables } from '../Components';
+import './MipsApps.css';
 
 
 
@@ -81,9 +82,13 @@ const MIPSApp = () => {
 
     return (
         <div>
-            <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
-            <textarea id="mips-input" value={mipsInput} onChange={(e) => setMipsInput(e.target.value)} />
-            <button id="simulate-mips-button" onClick={simulateMIPS}>Simulate MIPS</button>
+            <section className='inputs-container'>
+                <div className='row-container'>
+                    <textarea id="mips-input" className='input-text-area' value={mipsInput} onChange={(e) => setMipsInput(e.target.value)} />
+                    <button id="simulate-mips-button" className='btn' onClick={simulateMIPS}>Simulate MIPS</button>
+                </div>
+                <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
+            </section>
             <SimulationTables registers={registers} memory={memory} />
             <Debugger PC={PC} mipsInput={mipsInput} stepMIPS={stepMIPS} stepBackMIPS={stepBackMIPS} resetMIPS={resetMIPS} />
         </div>

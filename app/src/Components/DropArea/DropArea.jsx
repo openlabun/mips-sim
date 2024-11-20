@@ -52,9 +52,9 @@ const DropArea = ({ setMipsInput, setHexInput }) => {
       onDragOver={preventDefaults}
       onDragLeave={(e) => { preventDefaults(e); setIsHighlight(false); }}
       onDrop={handleDrop}
-      onMouseEnter={() => document.getElementById('dropArea').style.backgroundColor = '#f0f0f0'}
+      onMouseEnter={() => document.getElementById('dropArea').style.backgroundColor = '#9e6868'}
       onMouseLeave={() => document.getElementById('dropArea').style.backgroundColor = ''}
-      className={isHighlight ? 'highlight' : ''}
+      className = {`${isHighlight ? 'highlight' : ''} drop-area`}
     >
       Drop files here
     </div>
