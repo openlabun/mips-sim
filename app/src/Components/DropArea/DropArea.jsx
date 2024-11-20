@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { translateInstructionToMIPS } from '../../utils/TranslatorFunctions';
 import './DropArea.css';
+
 const DropArea = ({ setMipsInput, setHexInput }) => {
   const [isHighlight, setIsHighlight] = useState(false);
+
+  const hexToBinary = (hex) => {
+    return parseInt(hex, 16).toString(2).padStart(8, '0');
+  };
 
   const preventDefaults = (e) => {
     e.preventDefault();
@@ -11,20 +16,24 @@ const DropArea = ({ setMipsInput, setHexInput }) => {
 
   const handleDrop = (e) => {
     preventDefaults(e);
-    const files = e.dataTransfer.files;
-    processFiles(files);
     setIsHighlight(false);
-  };
 
-  const processFiles = (files) => {
+    const files = e.dataTransfer.files;
+    if (files.length === 0) {
+      console.error('No files dropped');
+      return;
+    }
+
+    console.log('File dropped:', files[0]);
+
     const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target.result;
+      console.log('File content:', text);
 
-    reader.onload = function (event) {
-      const fileContent = event.target.result;
-      const lines = fileContent.trim().split('\n');
-
+      const lines = text.split('\n');
       if (lines.length < 2) {
-        console.error("Invalid file format. Expected at least two lines.");
+        console.error('File does not contain enough lines');
         return;
       }
 
@@ -42,6 +51,10 @@ const DropArea = ({ setMipsInput, setHexInput }) => {
       setHexInput(originalInstructions.trim());
     };
 
+    reader.onerror = (error) => {
+      console.error('Error reading file:', error);
+    };
+
     reader.readAsText(files[0]);
   };
 
@@ -54,7 +67,7 @@ const DropArea = ({ setMipsInput, setHexInput }) => {
       onDrop={handleDrop}
       onMouseEnter={() => document.getElementById('dropArea').style.backgroundColor = '#9e6868'}
       onMouseLeave={() => document.getElementById('dropArea').style.backgroundColor = ''}
-      className = {`${isHighlight ? 'highlight' : ''} drop-area`}
+      className={`${isHighlight ? 'highlight' : ''} drop-area`}
     >
       Drop files here
     </div>

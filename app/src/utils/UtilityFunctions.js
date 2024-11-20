@@ -1,5 +1,5 @@
 
-function binaryToHex(binaryString) {
+export function binaryToHex(binaryString) {
     // Pad the binary string with leading zeros to ensure it's a multiple of 4
     while (binaryString.length % 4 !== 0) {
         binaryString = '0' + binaryString;
@@ -19,7 +19,7 @@ function binaryToHex(binaryString) {
     return "0x" + hexString.toUpperCase(); // Convert to uppercase for consistency
 }
 
-function hexToBinary(hex) {
+export function hexToBinary(hex) {
     let binary = '';
     for (let i = 0; i < hex.length; i++) {
         let bin = parseInt(hex[i], 16).toString(2);
@@ -30,7 +30,7 @@ function hexToBinary(hex) {
 
 
 
-function sum(a, b) {
+export function sum(a, b) {
     return a + b;
 }
 
