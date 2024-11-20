@@ -1,3 +1,5 @@
+import { hexToBinary, binaryToHex } from './UtilityFunctions';
+
 export function translateInstructionToHex(instruction) {
     const opcodeMap = {
         "add": "000000",
@@ -167,6 +169,7 @@ export function translateInstructionToMIPS(hexInstruction) {
         "11110": "fp",
         "11111": "ra"
     };
+    
     const binaryInstruction = hexToBinary(hexInstruction);
     const opcode = binaryInstruction.slice(0, 6);
     console.log(opcode);
