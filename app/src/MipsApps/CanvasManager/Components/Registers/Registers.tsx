@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CanvasElement from "../CanvasElement";
 import { assignInstructionVariables } from "../../../../utils/UtilsVariablesFuntion";
+import { Ids } from "../../../../model/Ids.enum";
 const Register = ({
   x,
   y,
@@ -18,7 +19,10 @@ const Register = ({
   const [activated, setActivates] = useState(true);
   const svgPathParam = "/components/Registers.svg";
   useEffect(() => {
-    assignInstructionVariables(value);
+    const values = assignInstructionVariables(value);
+    if (values.RegWrite === 1 || values.RegDst === 1) {
+      setActivates(true);
+    }
   }, [value]);
   return (
     <CanvasElement
@@ -28,7 +32,7 @@ const Register = ({
       yS={yS}
       svgPathParam={svgPathParam}
       activated={activated}
-      idParam="register"
+      idParam={Ids.REGISTERS}
     />
   );
 };

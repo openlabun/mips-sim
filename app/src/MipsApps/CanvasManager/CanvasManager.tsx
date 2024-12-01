@@ -1,7 +1,8 @@
 import React from "react";
 import "./CanvasManager.css";
 import { useCanvasContext } from "../CanvasContext/CanvasContext";
-import { Control, Memory, Register } from "./Components";
+import { CanvasArrow, Control, Memory, Register } from "./Components";
+import { Ids } from "../../model/Ids.enum";
 
 const CanvasManager = ({ value }: { value: string }) => {
   const { canvasRef } = useCanvasContext();
@@ -12,6 +13,7 @@ const CanvasManager = ({ value }: { value: string }) => {
       <Control x={650} y={200} xS={3} yS={2} value={value} />
       <Memory x={100} y={100} xS={3} yS={2} value={value} />
       <Register x={100} y={350} xS={3} yS={2} value={value} />
+      <CanvasArrow fromId={Ids.MEMORY} toId={Ids.CONTROL} />
     </div>
   );
 };

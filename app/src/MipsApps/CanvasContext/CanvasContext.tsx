@@ -23,6 +23,14 @@ interface CanvasContextType {
     id: string,
     options?: { opacity?: number; filter?: string }
   ) => void;
+  drawArrow: (
+    ctx: CanvasRenderingContext2D,
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+    color?: string
+  ) => void;
 }
 interface CanvasElementProps {
   x: number;
@@ -56,7 +64,43 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
       adjustCanvasSize(canvas);
     }
   }, []);
+  const drawArrow = (
+    ctx: CanvasRenderingContext2D,
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+    color: string = "black" // Color por defecto
+  ) => {
+    const headLength = 10; // Longitud de la cabeza de la flecha
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const angle = Math.atan2(dy, dx);
 
+    // Calcular las coordenadas del borde del componente de destino
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const offsetX = (dx / distance) * headLength;
+    const offsetY = (dy / distance) * headLength;
+
+    const adjustedToX = toX - offsetX;
+    const adjustedToY = toY - offsetY;
+
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(adjustedToX, adjustedToY);
+    ctx.lineTo(
+      adjustedToX - headLength * Math.cos(angle - Math.PI / 6),
+      adjustedToY - headLength * Math.sin(angle - Math.PI / 6)
+    );
+    ctx.moveTo(adjustedToX, adjustedToY);
+    ctx.lineTo(
+      adjustedToX - headLength * Math.cos(angle + Math.PI / 6),
+      adjustedToY - headLength * Math.sin(angle + Math.PI / 6)
+    );
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  };
   const adjustCanvasSize = (canvas: HTMLCanvasElement) => {
     const ratio = window.devicePixelRatio || 1; // Usa la densidad de píxeles del dispositivo
     const width = window.innerWidth; // El ancho de la ventana del navegador
@@ -171,7 +215,13 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
   };
   return (
     <CanvasContext.Provider
-      value={{ canvasRef, createElementWithSvg, getElementById, redrawElement }}
+      value={{
+        canvasRef,
+        createElementWithSvg,
+        getElementById,
+        redrawElement,
+        drawArrow,
+      }}
     >
       {children}
     </CanvasContext.Provider>

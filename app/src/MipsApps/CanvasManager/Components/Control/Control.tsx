@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CanvasElement from "../CanvasElement";
+import { Ids } from "../../../../model/Ids.enum";
 
 const Control = ({
   x,
@@ -17,7 +18,7 @@ const Control = ({
 }) => {
   const [activated, setActivates] = useState(true);
   const svgPathParam = "/components/Control.svg";
-  
+
   return (
     <CanvasElement
       x={x}
@@ -26,7 +27,7 @@ const Control = ({
       yS={yS}
       svgPathParam={svgPathParam}
       activated={activated}
-      idParam="control"
+      idParam={Ids.CONTROL}
     />
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CanvasElement from "../CanvasElement";
 import { assignInstructionVariables } from "../../../../utils/UtilsVariablesFuntion";
+import { Ids } from "../../../../model/Ids.enum";
 const Memory = ({
   x,
   y,
@@ -34,7 +35,7 @@ const Memory = ({
       yS={yS}
       svgPathParam={svgPathParam}
       activated={activated}
-      idParam="memory"
+      idParam={Ids.MEMORY}
     />
   );
 };

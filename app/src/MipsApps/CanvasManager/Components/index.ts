@@ -1,4 +1,5 @@
 import Control from "./Control";
 import Memory from "./Memory";
 import Register from "./Registers";
-export { Control, Memory, Register };
+import CanvasArrow from "./CanvasArrow/index";
+export { Control, Memory, Register, CanvasArrow };
