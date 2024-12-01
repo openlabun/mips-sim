@@ -86,6 +86,7 @@ const MIPSApp = () => {
   const [memory, setMemory] = useState(initialMemory);
   const [PC, setPC] = useState(0);
   const [history, setHistory] = useState([]);
+  const [currentInstruction, setCurrentInstruction] = useState("");
 
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
@@ -96,71 +97,49 @@ const MIPSApp = () => {
     document
       .getElementById("simulation-tables")
       .scrollIntoView({ behavior: "smooth" });
-    const simulateMIPS = () => {
-      document
-        .getElementById("simulation-tables")
-        .scrollIntoView({ behavior: "smooth" });
 
-      const hexInstructions = mipsInput.trim().split("\n");
-      resetMIPS();
+    const hexInstructions = mipsInput.trim().split("\n");
+    resetMIPS();
 
-      const newRegisters = { ...initialRegisters };
-      const newMemory = { ...initialMemory };
+    const newRegisters = { ...initialRegisters };
+    const newMemory = { ...initialMemory };
 
-      hexInstructions.forEach((instruction) => {
-        executeMIPSInstruction(instruction, newRegisters, newMemory);
-      });
-      hexInstructions.forEach((instruction) => {
-        executeMIPSInstruction(instruction, newRegisters, newMemory);
-      });
+    hexInstructions.forEach((instruction) => {
+      executeMIPSInstruction(instruction, newRegisters, newMemory);
+    });
 
-      updateTables(newRegisters, newMemory);
-    };
     updateTables(newRegisters, newMemory);
   };
 
   const stepMIPS = () => {
     const instructions = mipsInput.trim().split("\n");
     if (PC >= instructions.length) return;
-    const stepMIPS = () => {
-      const instructions = mipsInput.trim().split("\n");
-      if (PC >= instructions.length) return;
 
-      executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
-      setHistory([
-        ...history,
-        { PC, registers: { ...registers }, memory: { ...memory } },
-      ]);
-      const newRegisters = { ...registers };
-      const newMemory = { ...memory };
-      executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
+    const newRegisters = { ...registers };
+    const newMemory = { ...memory };
 
-      setPC(PC + 1);
-      updateTables(newRegisters, newMemory);
-    };
+    setHistory([
+      ...history,
+      { PC, registers: { ...registers }, memory: { ...memory } },
+    ]);
+
+    setCurrentInstruction(instructions[PC]);
+    executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
+
     setPC(PC + 1);
     updateTables(newRegisters, newMemory);
   };
 
   const stepBackMIPS = () => {
     if (PC === 0) return;
-    const stepBackMIPS = () => {
-      if (PC === 0) return;
 
-      const lastState = history.pop();
-      if (lastState) {
-        setPC(lastState.PC);
-        setRegisters(lastState.registers);
-        setMemory(lastState.memory);
-        setHistory(history.slice(0, -1));
-      }
-    };
     const lastState = history.pop();
     if (lastState) {
       setPC(lastState.PC);
       setRegisters(lastState.registers);
       setMemory(lastState.memory);
       setHistory(history.slice(0, -1));
+      setCurrentInstruction(mipsInput.trim().split("\n")[lastState.PC]);
     }
   };
 
@@ -169,6 +148,7 @@ const MIPSApp = () => {
     setHistory([]);
     setRegisters(initialRegisters);
     setMemory(initialMemory);
+    setCurrentInstruction("");
   };
 
   return (
@@ -198,10 +178,11 @@ const MIPSApp = () => {
         stepMIPS={stepMIPS}
         stepBackMIPS={stepBackMIPS}
         resetMIPS={resetMIPS}
+        currentInstruction={currentInstruction}
       />
       <CanvasProvider>
         <section className="canvas-container">
-          <CanvasManager />
+          <CanvasManager value={currentInstruction} />
         </section>
       </CanvasProvider>
     </div>

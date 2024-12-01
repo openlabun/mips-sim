@@ -14,9 +14,7 @@ const Memory = ({
   y: number;
   xS: number;
   yS: number;
-
-
-  value: number;
+  value: string;
 }) => {
   const [activated, setActivates] = useState(true);
    const svgPathParam = "/components/Memory.svg";
