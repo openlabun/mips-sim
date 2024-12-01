@@ -38,6 +38,38 @@ const initialRegisters = {
   sp: 0,
   fp: 0,
   ra: 0,
+  zero: 0,
+  at: 0,
+  v0: 0,
+  v1: 0,
+  a0: 0,
+  a1: 0,
+  a2: 0,
+  a3: 0,
+  t0: 0,
+  t1: 0,
+  t2: 0,
+  t3: 0,
+  t4: 0,
+  t5: 0,
+  t6: 0,
+  t7: 0,
+  s0: 0,
+  s1: 0,
+  s2: 0,
+  s3: 0,
+  s4: 0,
+  s5: 0,
+  s6: 0,
+  s7: 0,
+  t8: 0,
+  t9: 0,
+  k0: 0,
+  k1: 0,
+  gp: 0,
+  sp: 0,
+  fp: 0,
+  ra: 0,
 };
 
 const initialMemory = Array.from({ length: 32 }).reduce(
@@ -62,39 +94,65 @@ const MIPSApp = () => {
     document
       .getElementById("simulation-tables")
       .scrollIntoView({ behavior: "smooth" });
+    const simulateMIPS = () => {
+      document
+        .getElementById("simulation-tables")
+        .scrollIntoView({ behavior: "smooth" });
 
-    const hexInstructions = mipsInput.trim().split("\n");
-    resetMIPS();
+      const hexInstructions = mipsInput.trim().split("\n");
+      resetMIPS();
 
-    const newRegisters = { ...initialRegisters };
-    const newMemory = { ...initialMemory };
+      const newRegisters = { ...initialRegisters };
+      const newMemory = { ...initialMemory };
 
-    hexInstructions.forEach((instruction) => {
-      executeMIPSInstruction(instruction, newRegisters, newMemory);
-    });
+      hexInstructions.forEach((instruction) => {
+        executeMIPSInstruction(instruction, newRegisters, newMemory);
+      });
+      hexInstructions.forEach((instruction) => {
+        executeMIPSInstruction(instruction, newRegisters, newMemory);
+      });
 
+      updateTables(newRegisters, newMemory);
+    };
     updateTables(newRegisters, newMemory);
   };
 
   const stepMIPS = () => {
     const instructions = mipsInput.trim().split("\n");
     if (PC >= instructions.length) return;
+    const stepMIPS = () => {
+      const instructions = mipsInput.trim().split("\n");
+      if (PC >= instructions.length) return;
 
-    setHistory([
-      ...history,
-      { PC, registers: { ...registers }, memory: { ...memory } },
-    ]);
-    const newRegisters = { ...registers };
-    const newMemory = { ...memory };
-    executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
+      executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
+      setHistory([
+        ...history,
+        { PC, registers: { ...registers }, memory: { ...memory } },
+      ]);
+      const newRegisters = { ...registers };
+      const newMemory = { ...memory };
+      executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
 
+      setPC(PC + 1);
+      updateTables(newRegisters, newMemory);
+    };
     setPC(PC + 1);
     updateTables(newRegisters, newMemory);
   };
 
   const stepBackMIPS = () => {
     if (PC === 0) return;
+    const stepBackMIPS = () => {
+      if (PC === 0) return;
 
+      const lastState = history.pop();
+      if (lastState) {
+        setPC(lastState.PC);
+        setRegisters(lastState.registers);
+        setMemory(lastState.memory);
+        setHistory(history.slice(0, -1));
+      }
+    };
     const lastState = history.pop();
     if (lastState) {
       setPC(lastState.PC);
