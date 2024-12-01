@@ -3,7 +3,9 @@ import { Debugger } from "../Components";
 import { DropArea } from "../Components";
 import { SimulationTables } from "../Components";
 import "./MipsApps.css";
-import useCanvas from "./useCanvas";
+
+import CanvasManager from "./CanvasManager";
+import CanvasProvider from "./CanvasContext";
 
 const initialRegisters = {
   zero: 0,
@@ -84,7 +86,7 @@ const MIPSApp = () => {
   const [memory, setMemory] = useState(initialMemory);
   const [PC, setPC] = useState(0);
   const [history, setHistory] = useState([]);
-  const { canvasRef, createElement } = useCanvas();
+
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
     setMemory(newMemory);
@@ -197,9 +199,11 @@ const MIPSApp = () => {
         stepBackMIPS={stepBackMIPS}
         resetMIPS={resetMIPS}
       />
-      <section className="canvas-container">
-        <canvas ref={canvasRef} id="canvas"></canvas>
-      </section>
+      <CanvasProvider>
+        <section className="canvas-container">
+          <CanvasManager />
+        </section>
+      </CanvasProvider>
     </div>
   );
 };
