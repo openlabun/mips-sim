@@ -22,7 +22,13 @@ const CanvasElement = ({
   const [id, setId] = useState<string>(idParam);
 
   useEffect(() => {
-    const newId = createElementWithSvg(svgPathParam, { x, y, xS, yS,id: idParam });
+    const newId = createElementWithSvg(svgPathParam, {
+      x,
+      y,
+      xS,
+      yS,
+      id: idParam,
+    });
     setId(newId!);
   }, []);
 
