@@ -1,7 +1,9 @@
 import React from "react";
 import "./CanvasManager.css";
 import { useCanvasContext } from "../CanvasContext/CanvasContext";
-import { Control } from "./Components";
+import { Control, Memory, Register} from "./Components";
+
+
 const CanvasManager = () => {
   const { canvasRef } = useCanvasContext();
 
@@ -14,6 +16,22 @@ const CanvasManager = () => {
         xS={3}
         yS={2}
         svgPathParam="/components/Control.svg"
+        value={4}
+      />
+      <Memory
+        x={100}
+        y={100}
+        xS={3}
+        yS={2}
+        svgPathParam="/components/Memory.svg"
+        value={4}
+        />
+      <Register
+        x={100}
+        y={350}
+        xS={3}
+        yS={2}
+        svgPathParam="/components/Registers.svg"
         value={4}
       />
     </div>
