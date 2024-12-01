@@ -180,11 +180,14 @@ const MIPSApp = () => {
         resetMIPS={resetMIPS}
         currentInstruction={currentInstruction}
       />
-      <CanvasProvider>
+      
+
+      {/* If you want to use the canvas uncomment the following code and comment the last one*/}
+      {/* <CanvasProvider>
         <section className="canvas-container">
           <CanvasManager value={currentInstruction} />
         </section>
-      </CanvasProvider>
+      </CanvasProvider> */}
     </div>
   );
 };
