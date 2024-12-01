@@ -6,7 +6,6 @@ const Register = ({
   y,
   xS,
   yS,
-  svgPathParam,
 
   value,
 }: {
@@ -14,11 +13,11 @@ const Register = ({
   y: number;
   xS: number;
   yS: number;
-  svgPathParam: string;
 
   value: number;
 }) => {
   const [activated, setActivates] = useState(true);
+  const svgPathParam = "/components/Registers.svg";
   useEffect(() => {}, [value]);
   return (
     <CanvasElement
@@ -28,6 +27,7 @@ const Register = ({
       yS={yS}
       svgPathParam={svgPathParam}
       activated={activated}
+      idParam="register"
     />
   );
 };

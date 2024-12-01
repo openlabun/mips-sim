@@ -6,7 +6,7 @@ const Memory = ({
   y,
   xS,
   yS,
-  svgPathParam,
+
 
   value,
 }: {
@@ -14,11 +14,12 @@ const Memory = ({
   y: number;
   xS: number;
   yS: number;
-  svgPathParam: string;
+
 
   value: number;
 }) => {
   const [activated, setActivates] = useState(true);
+   const svgPathParam = "/components/Memory.svg";
   useEffect(() => {}, [value]);
   return (
     <CanvasElement
@@ -28,6 +29,7 @@ const Memory = ({
       yS={yS}
       svgPathParam={svgPathParam}
       activated={activated}
+      idParam="memory"
     />
   );
 };
