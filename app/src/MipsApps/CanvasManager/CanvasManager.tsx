@@ -1,18 +1,24 @@
-import React, { useEffect } from "react";
-
+import React from "react";
 import "./CanvasManager.css";
 import { useCanvasContext } from "../CanvasContext/CanvasContext";
+import { Control } from "./Components";
 const CanvasManager = () => {
-  const { canvasRef, createElementWithSvg } = useCanvasContext();
+  const { canvasRef } = useCanvasContext();
 
-  useEffect(() => {
-    const svgPath = "/components/Control.svg";
-    console.log(`Loading SVG from: ${svgPath}`);
-
-    createElementWithSvg(svgPath, { x: 24 ,y: 24, xS: 2.4, yS: 2.1 });
-  }, [createElementWithSvg]);
-
-  return <canvas ref={canvasRef} id="canvas" width="800" height="600"></canvas>;
+  return (
+    <div className="canvas-container">
+      <canvas ref={canvasRef} id="canvas" width="800" height="600"></canvas>
+      <Control
+        x={650}
+        y={200}
+        xS={3}
+        yS={2}
+        svgPathParam="/components/Control.svg"
+        pc={4}
+        value={4}
+      />
+    </div>
+  );
 };
 
 export default CanvasManager;
