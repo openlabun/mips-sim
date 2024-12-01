@@ -11,7 +11,12 @@ interface CanvasContextType {
   canvasRef: React.RefObject<HTMLCanvasElement>;
   createElementWithSvg: (
     svgPath: string,
-    { x, y, xS, yS }: { x: number; y: number; xS: number; yS: number }
+    {
+      x,
+      y,
+      xS,
+      yS,
+    }: { x: number; y: number; xS: number; yS: number; id: string }
   ) => void;
   getElementById: (id: string) => CanvasElement | undefined;
   redrawElement: (
@@ -111,10 +116,14 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
 
   const createElementWithSvg = (
     svgPath: string,
-    { x, y, xS, yS }: { x: number; y: number; xS: number; yS: number }
+    {
+      x,
+      y,
+      xS,
+      yS,
+      id,
+    }: { x: number; y: number; xS: number; yS: number; id: string }
   ): string => {
-    const id = generateUniqueId();
-
     // Asegúrate de que `svgPath` sea una ruta relativa o absoluta válida a tu archivo local.
     const canvas = canvasRef.current;
     if (canvas) {

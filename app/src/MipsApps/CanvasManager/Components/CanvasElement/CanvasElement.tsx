@@ -8,6 +8,7 @@ const CanvasElement = ({
   yS,
   svgPathParam,
   activated,
+  idParam,
 }: {
   x: number;
   y: number;
@@ -15,12 +16,13 @@ const CanvasElement = ({
   yS: number;
   svgPathParam: string;
   activated: boolean;
+  idParam: string;
 }) => {
   const { createElementWithSvg, redrawElement } = useCanvasContext();
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState<string>(idParam);
 
   useEffect(() => {
-    const newId = createElementWithSvg(svgPathParam, { x, y, xS, yS });
+    const newId = createElementWithSvg(svgPathParam, { x, y, xS, yS,id: idParam });
     setId(newId!);
   }, []);
 

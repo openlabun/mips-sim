@@ -7,7 +7,7 @@ const Control = ({
   xS,
   yS,
   svgPathParam,
-  
+
   value,
 }: {
   x: number;
@@ -15,11 +15,11 @@ const Control = ({
   xS: number;
   yS: number;
   svgPathParam: string;
-  
+
   value: number;
 }) => {
   const [activated, setActivates] = useState(true);
-  useEffect(() => {}, [ value]);
+  useEffect(() => {}, [value]);
   return (
     <CanvasElement
       x={x}
@@ -28,6 +28,7 @@ const Control = ({
       yS={yS}
       svgPathParam={svgPathParam}
       activated={activated}
+      idParam="control"
     />
   );
 };
