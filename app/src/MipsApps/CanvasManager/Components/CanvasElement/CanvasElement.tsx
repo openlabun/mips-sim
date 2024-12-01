@@ -22,14 +22,14 @@ const CanvasElement = ({
   useEffect(() => {
     const newId = createElementWithSvg(svgPathParam, { x, y, xS, yS });
     setId(newId!);
-  }, [createElementWithSvg, svgPathParam, x, y, xS, yS]);
+  }, []);
 
   useEffect(() => {
     if (id) {
       console.log(`Redrawing element with id: ${id}, activated: ${activated}`);
       redrawElement(id, {
         opacity: activated ? 1.0 : 0.5,
-        filter: activated ? "none" : "blur(100px)",
+        filter: activated ? "none" : "grayscale(100%)",
       });
     }
   }, [activated, id, redrawElement]);

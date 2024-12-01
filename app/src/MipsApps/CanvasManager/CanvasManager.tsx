@@ -14,7 +14,6 @@ const CanvasManager = () => {
         xS={3}
         yS={2}
         svgPathParam="/components/Control.svg"
-        pc={4}
         value={4}
       />
     </div>

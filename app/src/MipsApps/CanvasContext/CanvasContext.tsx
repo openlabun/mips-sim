@@ -4,6 +4,7 @@ import React, {
   useRef,
   useEffect,
   ReactNode,
+  useState,
 } from "react";
 
 interface CanvasContextType {
@@ -41,7 +42,9 @@ interface CanvasProviderProps {
 
 export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const elementsRef = useRef<Map<string, CanvasElement>>(new Map());
+  const [elements, setElements] = useState<{ [key: string]: CanvasElement }>(
+    {}
+  );
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -72,7 +75,8 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
     id: string,
     options?: { opacity?: number; filter?: string }
   ) => {
-    const element = elementsRef.current.get(id);
+    const element = elements[id];
+    console.log(elements);
     if (element) {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
@@ -89,9 +93,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
         console.log("Redrawing element with id: ", id);
         ctx.save();
         ctx.globalAlpha = element.opacity ?? 1.0;
-        ctx.filter =
-          element.filter ??
-          "contrast(1.4) sepia(1) drop-shadow(-9px 9px 3px #e81)";
+        ctx.filter = element.filter ?? "none";
 
         ctx.drawImage(
           element.img,
@@ -102,24 +104,8 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
         );
         ctx.restore();
       }
-    }
-  };
-
-  const redrawAll = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (canvas && ctx) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      elementsRef.current.forEach((element) => {
-        const { x, y, xS, yS, img, opacity, filter } = element;
-
-        ctx.save();
-        ctx.globalAlpha = opacity ?? 1.0;
-        ctx.filter = filter ?? "none";
-
-        ctx.drawImage(img, x, y, img.width * xS, img.height * yS);
-        ctx.restore();
-      });
+    } else {
+      console.error(`Element with id ${id} not found`);
     }
   };
 
@@ -139,10 +125,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
           const width = img.width * xS;
           const height = img.height * yS;
 
-          ctx.drawImage(img, x, y, width, height);
-
-          // Guardar el elemento en el mapa
-          elementsRef.current.set(id, {
+          const element = {
             id,
             svgPath,
             x,
@@ -151,9 +134,12 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
             yS,
             img,
             ctx,
-            opacity: 1.0, // Valor inicial predeterminado
-            filter: "none", // Sin filtro por defecto
-          });
+            opacity: 1.0,
+            filter: "none",
+          };
+          // Guardar el elemento en el mapa
+          setElements((prev) => ({ ...prev, [id]: element }));
+          redrawElement(id);
         };
 
         // Usa directamente el path del archivo SVG
@@ -172,7 +158,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
     return `element-${Math.random().toString(36).substr(2, 9)}`;
   };
   const getElementById = (id: string): CanvasElement | undefined => {
-    return elementsRef.current.get(id);
+    return elements[id];
   };
   return (
     <CanvasContext.Provider
