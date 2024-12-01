@@ -198,7 +198,7 @@ const MIPSApp = () => {
         resetMIPS={resetMIPS}
       />
       <section className="canvas-container">
-        <canvas ref={canvasRef}></canvas>
+        <canvas ref={canvasRef} id="canvas"></canvas>
       </section>
     </div>
   );
