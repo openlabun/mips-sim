@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CanvasElement from "../CanvasElement";
-
+import { assignInstructionVariables } from "../../../../utils/UtilsVariablesFuntion";
 const Memory = ({
   x,
   y,
   xS,
   yS,
-
 
   value,
 }: {
@@ -17,8 +16,16 @@ const Memory = ({
   value: string;
 }) => {
   const [activated, setActivates] = useState(true);
-   const svgPathParam = "/components/Memory.svg";
-  useEffect(() => {}, [value]);
+  const svgPathParam = "/components/Memory.svg";
+  useEffect(() => {
+    if (value === "") return;
+    const instructions = assignInstructionVariables(value);
+    if (instructions.MemWrite === 1 || instructions.MemRead === 1) {
+      setActivates(true);
+    } else {
+      setActivates(false);
+    }
+  }, [value]);
   return (
     <CanvasElement
       x={x}

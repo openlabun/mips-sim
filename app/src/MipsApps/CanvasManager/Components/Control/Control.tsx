@@ -17,7 +17,7 @@ const Control = ({
 }) => {
   const [activated, setActivates] = useState(true);
   const svgPathParam = "/components/Control.svg";
-  useEffect(() => {}, [value]);
+  
   return (
     <CanvasElement
       x={x}

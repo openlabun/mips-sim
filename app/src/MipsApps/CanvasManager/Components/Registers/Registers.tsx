@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CanvasElement from "../CanvasElement";
-
+import { assignInstructionVariables } from "../../../../utils/UtilsVariablesFuntion";
 const Register = ({
   x,
   y,
@@ -17,7 +17,9 @@ const Register = ({
 }) => {
   const [activated, setActivates] = useState(true);
   const svgPathParam = "/components/Registers.svg";
-  useEffect(() => {}, [value]);
+  useEffect(() => {
+    assignInstructionVariables(value);
+  }, [value]);
   return (
     <CanvasElement
       x={x}
