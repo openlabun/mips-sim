@@ -1,9 +1,10 @@
 .drop-area {
-    width: 25%;
-    border: 2px dashed #9e6868;
-    border-radius: 5px;
-    padding: 1em;
-    text-align: center;
-    cursor: pointer;
-    font-size: 1em;
+  width: 25%;
+  border: 2px dashed var(--secondary-color);
+  border-radius: 5px;
+  padding: 1em;
+  text-align: center;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s;
 }

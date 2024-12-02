@@ -1,0 +1,10 @@
+.card {
+  display: flex;
+  gap: 1rem;
+  transition: all 0.3s;
+  
+}
+
+.p-button {
+  background-color: var(--primary-color);
+}

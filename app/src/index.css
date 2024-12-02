@@ -1,5 +1,24 @@
 :root {
-    background-color: black;
-    color: white;
+  --primary-color: #26547c;
+  --secondary-color: #ef476f;
+  --white-color: #fcfcfc;
 }
-
+html {
+  color: var(--primary-color);
+  background-color: var(--white-color);
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  backdrop-filter: blur(10px);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  backdrop-filter: blur(10px);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
