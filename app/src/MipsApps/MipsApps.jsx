@@ -7,6 +7,7 @@ import { SimulationTables } from "../Components";
 import CanvasManager from "./CanvasManager";
 import CanvasProvider from "./CanvasContext";
 import { ImageManager } from "./MipsAppsWithImages/ImageManager";
+import { executeMIPSInstruction } from '../utils/DebuggerFunctions';
 
 const initialRegisters = {
   zero: 0,
@@ -91,6 +92,7 @@ const MIPSApp = () => {
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState("Base.png");
   const [time, setTime] = useState(1000);
+  const [aluResult, setAluResult] = useState(0);
   useEffect(() => {
     const selectedImage = ImageSelector(currentInstruction);
     setCurrentImage(selectedImage);
@@ -112,7 +114,14 @@ const MIPSApp = () => {
     const newMemory = { ...initialMemory };
 
     hexInstructions.forEach((instruction) => {
-      executeMIPSInstruction(instruction, newRegisters, newMemory);
+      const { aluResult: result, newPC } = executeMIPSInstruction(
+        instruction,
+        newRegisters,
+        newMemory,
+        PC
+      );
+      setAluResult(result);
+      PC = newPC;
     });
 
     updateTables(newRegisters, newMemory);
@@ -130,18 +139,16 @@ const MIPSApp = () => {
       { PC, registers: { ...registers }, memory: { ...memory } },
     ]);
     
-    setCurrentInstruction(instructions[PC]);
-    const newPc = executeMIPSInstruction(
+    
+    const { aluResult: result, newPC } = executeMIPSInstruction(
       instructions[PC],
       newRegisters,
       newMemory,
       PC
     );
-    if (newPc !== undefined) {
-      setPC(newPc);
-    } else {
-      setPC(PC + 1);
-    }
+    setCurrentInstruction(instructions[PC]);
+    setAluResult(result);
+    setPC(newPC);
 
     updateTables(newRegisters, newMemory);
   };
@@ -201,7 +208,7 @@ const MIPSApp = () => {
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
       </section>
       <h2 className=" ml-8 text-6xl font-bold">PC: {PC}</h2>
-      <ImageManager image={currentImage} instruction={currentInstruction} />
+      <ImageManager image={currentImage} instruction={currentInstruction} aluResult={aluResult} />
       {/* If you want to use the canvas uncomment the following code and comment the last one*/}
       {/* <CanvasProvider>
         <section className="canvas-container">
@@ -225,80 +232,6 @@ const MIPSApp = () => {
   );
 };
 
-function executeMIPSInstruction(instruction, registers, memory, PC) {
-  // Split MIPS instruction into operation and operands
-  const [op, ...operands] = instruction.split(" ");
-  // Implement execution logic for each MIPS operation
-  switch (op) {
-    case "add": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] + registers[rt];
-      break;
-    }
-    case "sub": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] - registers[rt];
-      break;
-    }
-    case "slt": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
-      break;
-    }
-    case "and": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] & registers[rt];
-      break;
-    }
-    case "or": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] | registers[rt];
-      break;
-    }
-    case "addi": {
-      const [rd, rs, immediate] = operands;
-      registers[rd] = registers[rs] + parseInt(immediate);
-      break;
-    }
-    case "lw": {
-      const [rt, rs, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
-      if (memory.hasOwnProperty(address)) {
-        registers[rt] = memory[address];
-      } else {
-        console.error("Memory address not found:", address);
-      }
-      break;
-    }
-    case "sw": {
-      const [rt, rs, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
-      memory[address] = registers[rt];
-      break;
-    }
-    case "j": {
-      const [address] = operands;
-      return parseInt(address);
-    }
-    case "beq": {
-      const [rs, rt, offset] = operands;
-      if (registers[rs] === registers[rt]) {
-        return PC + parseInt(offset);
-      }
-      break;
-    }
-    case "bne": {
-      const [rs, rt, offset] = operands;
-      if (registers[rs] !== registers[rt]) {
-        return PC + parseInt(offset);
-      }
-      break;
-    }
-    default: {
-      console.error("Unsupported operation:", op);
-      break;
-    }
-  }
-}
+
 
 export default MIPSApp;

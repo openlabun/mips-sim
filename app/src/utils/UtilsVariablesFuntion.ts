@@ -1,5 +1,6 @@
 import { translateInstructionToHex } from './TranslatorFunctions';
 import { hexToBinary } from './UtilityFunctions';
+import { executeMIPSInstruction } from './DebuggerFunctions';
 
 export interface InstructionVariables {
   PCwrite: number;
@@ -18,10 +19,11 @@ export interface InstructionVariables {
   RegDst: number;
   ALUControl: string;
   OPCode: string;
+  ALUResult: number;
   IntructionRegister: string;
 }
 
-export function assignInstructionVariables(instruction: string): InstructionVariables {
+export function assignInstructionVariables(instruction: string, aluResult: number): InstructionVariables {
   const instructionMap = {
     add: {
       PCwrite: 0,
@@ -40,6 +42,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: "01",
       ALUControl: "0010",
       OPCode: "000000",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     sub: {
@@ -59,6 +62,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: "01",
       ALUControl: "0110",
       OPCode: "000000",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     slt: {
@@ -78,6 +82,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: "01",
       ALUControl: "0111",
       OPCode: "000000",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     and: {
@@ -97,6 +102,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: "01",
       ALUControl: "0000",
       OPCode: "000000",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     or: {
@@ -116,6 +122,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: "01",
       ALUControl: "0001",
       OPCode: "000000",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     addi: {
@@ -135,6 +142,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: "01",
       ALUControl: "0010",
       OPCode: "001000",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     lw: {
@@ -155,6 +163,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       Pcsource: 0,
       ALUControl: "0010",
       OPCode: "100011",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     sw: {
@@ -174,6 +183,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: 0,
       ALUControl: "0010",
       OPCode: "101011",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     beq: {
@@ -193,6 +203,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: 0,
       ALUControl: "0110",
       OPCode: "000100",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     bne: {
@@ -212,6 +223,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: 0,
       ALUControl: "0110",
       OPCode: "000101",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     j: {
@@ -231,6 +243,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: 0,
       ALUControl: "0000",
       OPCode: "000010",
+      ALUResult: 0,
       IntructionRegister: ""
     },
     else: {
@@ -250,6 +263,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: 0,
       ALUControl: "0000",
       OPCode: "000000",
+      ALUResult: 0,
       IntructionRegister: ""
     }
   };
@@ -262,27 +276,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
     const hexInstruction = translateInstructionToHex(instruction);
     const binaryInstruction = hexToBinary(hexInstruction);
     variables.IntructionRegister = binaryInstruction.padStart(32, '0');
-
-
-    switch (variables.ALUControl) {
-      case "0010": // add
-        variables.ALUResult = 1; 
-        break;
-      case "0110": // sub
-        variables.ALUResult = 2; 
-        break;
-      case "0000": // and
-        variables.ALUResult = 3; 
-        break;
-      case "0001": // or
-        variables.ALUResult = 4; 
-        break;
-      case "0111": // slt
-        variables.ALUResult = 5; 
-        break;
-      default:
-        variables.ALUResult = 0;
-    }
+    variables.ALUResult = aluResult;
 
     return variables;
   } else {

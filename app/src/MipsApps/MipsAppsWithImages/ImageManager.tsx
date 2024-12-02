@@ -8,7 +8,7 @@ import {
 } from "../../utils/UtilsVariablesFuntion";
 import { Chips, ChipsChangeEvent } from "primereact/chips";
 import { FloatLabel } from "primereact/floatlabel";
-export const ImageManager = ({ image, instruction = "" }) => {
+export const ImageManager = ({ image, instruction = "", aluResult }) => {
   const [vars, setVars] = useState<InstructionVariables | {}>({});
   const [variables, setVariables] = useState<propsEl[]>([]);
   const [value, setValue] = useState<string[]>([]);
@@ -30,7 +30,8 @@ export const ImageManager = ({ image, instruction = "" }) => {
 
   useEffect(() => {
     const assignedVars = assignInstructionVariables(
-      instruction
+      instruction,
+      aluResult
     ) as InstructionVariables;
     setVars(assignedVars);
     const newVariables = Object.keys(assignedVars).map((key) => ({
@@ -39,7 +40,7 @@ export const ImageManager = ({ image, instruction = "" }) => {
     }));
     setVariables(newVariables);
     console.log(newVariables);
-  }, [instruction]);
+  }, [instruction, aluResult]);
 
   return (
     <section className="flex flex-col justify-center items-center">
