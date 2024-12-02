@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Debugger } from "../Components";
 import { DropArea } from "../Components";
-import { SimulationTables } from "../Components";
+import { ImageSelector } from "../utils/ImageSelector";
 import "./MipsApps.css";
-
+import { SimulationTables } from "../Components";
 import CanvasManager from "./CanvasManager";
 import CanvasProvider from "./CanvasContext";
+import { ImageManager } from "./MipsAppsWithImages/Components/imageManager";
 
 const initialRegisters = {
   zero: 0,
@@ -87,7 +88,11 @@ const MIPSApp = () => {
   const [PC, setPC] = useState(0);
   const [history, setHistory] = useState([]);
   const [currentInstruction, setCurrentInstruction] = useState("");
-
+  const [images, setImages] = useState([]);
+  const [currentImage, setCurrentImage] = useState("");
+  useEffect(() => {
+    setImages(ImageSelector(currentInstruction));
+  }, [currentInstruction]);
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
     setMemory(newMemory);
@@ -150,7 +155,17 @@ const MIPSApp = () => {
     setMemory(initialMemory);
     setCurrentInstruction("");
   };
-
+  const start = () => {
+    setCurrentImage(images[0]);
+    // hacer que cada 5 segundos se cambie la imagen por la siguiente en la lista hasta que se acaben
+    let i = 0;
+    setInterval(() => {
+      if (i < images.length) {
+        setCurrentImage(images[i]);
+        i++;
+      }
+    }, 1000);
+  };
   return (
     <div>
       <section className="inputs-container">
@@ -171,23 +186,25 @@ const MIPSApp = () => {
         </div>
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
       </section>
-      <SimulationTables registers={registers} memory={memory} />
-      <Debugger
-        PC={PC}
-        mipsInput={mipsInput}
-        stepMIPS={stepMIPS}
-        stepBackMIPS={stepBackMIPS}
-        resetMIPS={resetMIPS}
-        currentInstruction={currentInstruction}
-      />
-      
-
+      <ImageManager image={currentImage} />
       {/* If you want to use the canvas uncomment the following code and comment the last one*/}
       {/* <CanvasProvider>
         <section className="canvas-container">
           <CanvasManager value={currentInstruction} />
         </section>
       </CanvasProvider> */}
+
+      <SimulationTables
+        registers={registers}
+        memory={memory}
+        PC={PC}
+        mipsInput={mipsInput}
+        stepMIPS={stepMIPS}
+        stepBackMIPS={stepBackMIPS}
+        resetMIPS={resetMIPS}
+        currentInstruction={currentInstruction}
+        start={start}
+      />
     </div>
   );
 };
