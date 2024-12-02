@@ -5,7 +5,7 @@ import "./controlButtons.css";
 
 const ControlButtons = ({ stepMIPS, stepBackMIPS, resetMIPS, start }) => {
   return (
-    <div className="card">
+    <div className="card" id="control-buttons">
       <Button onClick={stepBackMIPS} icon="pi pi-step-backward" />
       <Button icon="pi pi-play" onClick={start} />
       <Button onClick={stepMIPS} icon="pi pi-step-forward" />

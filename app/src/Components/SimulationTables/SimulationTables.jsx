@@ -1,8 +1,8 @@
-import React from "react";
-import "./SimulationTables.css";
-import Debugger from "../Debugger";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import Debugger from "../Debugger";
+import "./SimulationTables.css";
 
 const SimulationTables = ({
   registers,
@@ -15,17 +15,33 @@ const SimulationTables = ({
   start,
   resetMIPS,
 }) => {
-  const registerData = Object.keys(registers).map((reg) => ({
-    register: reg,
-    value: `0x${registers[reg].toString(16).toUpperCase()}`,
-  }));
-  const memoryData = Object.keys(memory).map((addr) => ({
-    address: `0x${parseInt(addr).toString(16).toUpperCase()}`,
-    value: `0x${memory[addr].toString(16).toUpperCase()}`,
-  }));
+  const [registerData, setRegisterData] = useState([]);
+  const [memoryData, setMemoryData] = useState([]);
+
+  useEffect(() => {
+    const updatedRegisterData = Object.keys(registers).map((reg) => ({
+      register: reg,
+      value: `0x${registers[reg].toString(16).toUpperCase()}`,
+    }));
+    setRegisterData(updatedRegisterData);
+  }, [registers]);
+
+  useEffect(() => {
+    const updatedMemoryData = Object.keys(memory).map((addr) => ({
+      address: `0x${parseInt(addr).toString(16).toUpperCase()}`,
+      value: `0x${memory[addr].toString(16).toUpperCase()}`,
+    }));
+    setMemoryData(updatedMemoryData);
+  }, [memory]);
+
   return (
     <div id="simulation-tables" className="tables-container">
-      <DataTable value={registerData} scrollable scrollHeight="30rem">
+      <DataTable
+        value={registerData}
+        id="registerTable"
+        scrollHeight="30rem"
+        style={{ width: "25%" }}
+      >
         <Column field="register" header="Register"></Column>
         <Column field="value" header="Value"></Column>
       </DataTable>
@@ -38,7 +54,12 @@ const SimulationTables = ({
         currentInstruction={currentInstruction}
         start={start}
       />
-      <DataTable value={memoryData} scrollable scrollHeight="30rem">
+      <DataTable
+        value={memoryData}
+        id="ramTable"
+        scrollHeight="30rem"
+        style={{ width: "25%" }}
+      >
         <Column field="address" header="Address"></Column>
         <Column field="value" header="Value"></Column>
       </DataTable>
