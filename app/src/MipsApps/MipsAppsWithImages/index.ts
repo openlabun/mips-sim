@@ -1,2 +1,2 @@
-import { ImageManager } from "./Components/imageManager";
-export { ImageManager };
+import { ImageManager } from "./ImageManager";
+export default ImageManager;

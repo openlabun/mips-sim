@@ -6,7 +6,7 @@ import "./MipsApps.css";
 import { SimulationTables } from "../Components";
 import CanvasManager from "./CanvasManager";
 import CanvasProvider from "./CanvasContext";
-import { ImageManager } from "./MipsAppsWithImages/Components/imageManager";
+import { ImageManager } from "./MipsAppsWithImages/ImageManager";
 
 const initialRegisters = {
   zero: 0,
@@ -89,7 +89,7 @@ const MIPSApp = () => {
   const [history, setHistory] = useState([]);
   const [currentInstruction, setCurrentInstruction] = useState("");
   const [images, setImages] = useState([]);
-  const [currentImage, setCurrentImage] = useState("");
+  const [currentImage, setCurrentImage] = useState("Base.png");
   useEffect(() => {
     setImages(ImageSelector(currentInstruction));
   }, [currentInstruction]);
@@ -186,7 +186,7 @@ const MIPSApp = () => {
         </div>
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
       </section>
-      <ImageManager image={currentImage} />
+      <ImageManager image={currentImage} instruction={currentInstruction} />
       {/* If you want to use the canvas uncomment the following code and comment the last one*/}
       {/* <CanvasProvider>
         <section className="canvas-container">

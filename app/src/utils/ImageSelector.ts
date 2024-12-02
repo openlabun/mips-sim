@@ -1,14 +1,21 @@
 const value = {
-  add: ["add/add1", "add/add2", "add/add3", "add/add4"],
-  sub: ["add/add1", "add/add2", "add/add3", "add/add4"],
-  slt: ["add/add1", "add/add2", "add/add3", "add/add4"],
-  addi: ["addi/addi1", "addi/addi2", "addi/addi3", "addi/addi4"],
-  and: ["add/add1", "add/add2", "add/add3", "add/add4"],
-  or: ["add/add1", "add/add2", "add/add3", "add/add4"],
-  lw: ["lw/lw1", "lw/lw2", "lw/lw3", "lw/lw4", "lw/lw5"],
-  sw: ["sw/sw1", "sw/sw2", "sw/sw3", "sw/sw4"],
+  add: ["add/add1.png", "add/add2.png", "add/add3.png", "add/add4.png"],
+  sub: ["add/add1.png", "add/add2.png", "add/add3.png", "add/add4.png"],
+  slt: ["add/add1.png", "add/add2.png", "add/add3.png", "add/add4.png"],
+  addi: [
+    "addi/addi1.png",
+    "addi/addi2.png",
+    "addi/addi3.png",
+    "addi/addi4.png",
+  ],
+  and: ["add/add1.png", "add/add2.png", "add/add3.png", "add/add4.png"],
+  or: ["add/add1.png", "add/add2.png", "add/add3.png", "add/add4.png"],
+  lw: ["lw/lw1.png", "lw/lw2.png", "lw/lw3.png", "lw/lw4.png", "lw/lw5.png"],
+  sw: ["sw/sw1.png", "sw/sw2.png", "sw/sw3.png", "sw/sw4.png"],
+  else: ["Base.png"],
 };
 
 export const ImageSelector = (instruction: string): string[] => {
-  return value[instruction.split(" ")[0]] as string[];
+  const key = instruction.split(" ")[0];
+  return value[key] || value["else"];
 };
