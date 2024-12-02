@@ -66,38 +66,38 @@ export function translateInstructionToHex(instruction) {
     let binaryInstruction = opcode;
     console.log(parts[0]);
     if (["add", "sub", "slt", "and", "or"].includes(parts[0])) {
-        // R-type instruction
+        
         const rd = regMap[parts[1]];
         const rs = regMap[parts[2]];
         const rt = regMap[parts[3]];
         if (!rd || !rs || !rt) return "Invalid Registers";
         binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
     } else if (["lw", "sw"].includes(parts[0])) {
-        // I-type instruction
+        
         const rt = regMap[parts[1]];
         const rs = regMap[parts[3].split(',')[0]];
         const immediate = parseInt(parts[2]);
         if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["addi"].includes(parts[0])) {
-        // I-type instruction
+      
         const rt = regMap[parts[1]];
         const rs = regMap[parts[2]];
         const immediate = parseInt(parts[3]);
         if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["beq", "bne"].includes(parts[0])) {
-        // I-type instruction
+       
         const rs = regMap[parts[1]];
         const rt = regMap[parts[2]];
         const label = parts[3];
         if (!rs || !rt) return "Invalid Registers";
-        // For simplicity, assuming label is an immediate value (offset)
+      
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (offset >>> 0).toString(2).padStart(16, '0');
     } else if (["j"].includes(parts[0])) {
-        // J-type instruction
+    
         const address = parseInt(parts[1]);
         if (isNaN(address)) return "Invalid Syntax";
         binaryInstruction += (address >>> 0).toString(2).padStart(26, '0');
@@ -105,9 +105,9 @@ export function translateInstructionToHex(instruction) {
         return "Unsupported Instruction";
     }
 
-    // Convert binary instruction to hexadecimal
+   
     const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
-    //return "0x" + hexInstruction;
+  
     return hexInstruction;
 }
 
@@ -179,7 +179,7 @@ export function translateInstructionToMIPS(hexInstruction) {
     let mipsInstruction = opcodeMIPS + " ";
 
     if (["add", "sub", "slt", "and", "or"].includes(opcodeMIPS)) {
-        // R-type instruction
+
         const func = binaryInstruction.slice(26, 32);;
         console.log("Instruction func ", func);
         const funcMIPS = funcMap[func];
@@ -192,7 +192,7 @@ export function translateInstructionToMIPS(hexInstruction) {
         if (!rs || !rt || !rd) return "Invalid Registers";
         mipsInstruction += rd + " " + rs + " " + rt;
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
-        // I-type instruction
+      
         const rt = regMap[binaryInstruction.slice(6, 11)];
         const rs = regMap[binaryInstruction.slice(11, 16)];
         const offset = binaryInstruction.slice(16, 32);
@@ -200,26 +200,26 @@ export function translateInstructionToMIPS(hexInstruction) {
         if (!rt || !rs || isNaN(offset)) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + binaryToHex(offset);
     } else if (["addi"].includes(opcodeMIPS)) {
-        // I-type instruction
+        
         console.log("I-type instruction, addi");
         const rt = regMap[binaryInstruction.slice(6, 11)];
         const rs = regMap[binaryInstruction.slice(11, 16)];
-        // const immediate = parseInt(binaryInstruction.slice(16, 32), 16);
+        
         console.log('immediate ', binaryInstruction.slice(16, 32));
         console.log('immediate formated ', binaryToHex(binaryInstruction.slice(16, 32)));
         const immediate = binaryToHex(binaryInstruction.slice(16, 32));
         if (!rt || !rs || !immediate) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + immediate;
     } else if (["beq", "bne"].includes(opcodeMIPS)) {
-        // I-type instruction
+    
         const rs = regMap[binaryInstruction.slice(6, 11)];
         const rt = regMap[binaryInstruction.slice(11, 16)];
         const offset = parseInt(binaryInstruction.slice(16, 32), 16);
         if (!rs || !rt || isNaN(offset)) return "Invalid Syntax";
-        // For simplicity, assuming label is an immediate value (offset)
+        
         mipsInstruction += rs + " " + rt + " " + offset;
     } else if (["j"].includes(opcodeMIPS)) {
-        // J-type instruction
+     
         const address = binaryToHex(binaryInstruction.slice(6, 32));
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;

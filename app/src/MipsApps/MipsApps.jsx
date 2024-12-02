@@ -131,9 +131,18 @@ const MIPSApp = () => {
     ]);
 
     setCurrentInstruction(instructions[PC]);
-    executeMIPSInstruction(instructions[PC], newRegisters, newMemory);
+    const newPc = executeMIPSInstruction(
+      instructions[PC],
+      newRegisters,
+      newMemory,
+      PC
+    );
+    if (newPc !== undefined) {
+      setPC(newPc);
+    } else {
+      setPC(PC + 1);
+    }
 
-    setPC(PC + 1);
     updateTables(newRegisters, newMemory);
   };
 
@@ -216,8 +225,10 @@ const MIPSApp = () => {
   );
 };
 
-const executeMIPSInstruction = (instruction, registers, memory) => {
+function executeMIPSInstruction(instruction, registers, memory, PC) {
+  // Split MIPS instruction into operation and operands
   const [op, ...operands] = instruction.split(" ");
+  // Implement execution logic for each MIPS operation
   switch (op) {
     case "add": {
       const [rd, rs, rt] = operands;
@@ -250,8 +261,8 @@ const executeMIPSInstruction = (instruction, registers, memory) => {
       break;
     }
     case "lw": {
-      const [rt, offset] = operands;
-      const address = parseInt(offset, 16);
+      const [rt, rs, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address];
       } else {
@@ -260,9 +271,27 @@ const executeMIPSInstruction = (instruction, registers, memory) => {
       break;
     }
     case "sw": {
-      const [rt, offset] = operands;
-      const address = parseInt(offset, 16);
+      const [rt, rs, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
       memory[address] = registers[rt];
+      break;
+    }
+    case "j": {
+      const [address] = operands;
+      return parseInt(address);
+    }
+    case "beq": {
+      const [rs, rt, offset] = operands;
+      if (registers[rs] === registers[rt]) {
+        return PC + parseInt(offset);
+      }
+      break;
+    }
+    case "bne": {
+      const [rs, rt, offset] = operands;
+      if (registers[rs] !== registers[rt]) {
+        return PC + parseInt(offset);
+      }
       break;
     }
     default: {
@@ -270,6 +299,6 @@ const executeMIPSInstruction = (instruction, registers, memory) => {
       break;
     }
   }
-};
+}
 
 export default MIPSApp;
