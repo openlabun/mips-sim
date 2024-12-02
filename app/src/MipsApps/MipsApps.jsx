@@ -90,6 +90,7 @@ const MIPSApp = () => {
   const [currentInstruction, setCurrentInstruction] = useState("");
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState("Base.png");
+  const [time, setTime] = useState(1000);
   useEffect(() => {
     setImages(ImageSelector(currentInstruction));
     setCurrentImage(images[0]);
@@ -158,14 +159,14 @@ const MIPSApp = () => {
   };
   const start = () => {
     setCurrentImage(images[0]);
-    // hacer que cada 5 segundos se cambie la imagen por la siguiente en la lista hasta que se acaben
+
     let i = 0;
     setInterval(() => {
       if (i < images.length) {
         setCurrentImage(images[i]);
         i++;
       }
-    }, 1000);
+    }, time);
   };
   return (
     <div>
@@ -208,6 +209,7 @@ const MIPSApp = () => {
         resetMIPS={resetMIPS}
         currentInstruction={currentInstruction}
         start={start}
+        setTime={setTime}
       />
     </div>
   );

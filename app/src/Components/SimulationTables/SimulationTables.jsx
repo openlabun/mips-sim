@@ -14,6 +14,8 @@ const SimulationTables = ({
   currentInstruction,
   start,
   resetMIPS,
+  time,
+  setTime,
 }) => {
   const [registerData, setRegisterData] = useState([]);
   const [memoryData, setMemoryData] = useState([]);
@@ -53,6 +55,8 @@ const SimulationTables = ({
         resetMIPS={resetMIPS}
         currentInstruction={currentInstruction}
         start={start}
+        time={time}
+        setTime={setTime}
       />
       <DataTable
         value={memoryData}
