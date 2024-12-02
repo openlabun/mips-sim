@@ -92,7 +92,8 @@ const MIPSApp = () => {
   const [currentImage, setCurrentImage] = useState("Base.png");
   useEffect(() => {
     setImages(ImageSelector(currentInstruction));
-  }, [currentInstruction]);
+    setCurrentImage(images[0]);
+  }, [currentInstruction, images]);
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
     setMemory(newMemory);
@@ -168,6 +169,9 @@ const MIPSApp = () => {
   };
   return (
     <div>
+      <header className=" w-full flex justify-center items-center bg-[var(--secondary-color)] text-[var(--white-color)] h-36 font-bold text-2xl">
+        <h1>MIPS Visual Simulator</h1>
+      </header>
       <section className="inputs-container">
         <div className="row-container">
           <textarea

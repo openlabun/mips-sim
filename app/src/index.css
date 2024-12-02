@@ -28,7 +28,9 @@ html {
   background: var(--secondary-color);
   backdrop-filter: blur(10px);
   border-radius: 5px;
+  transition: all 0.3s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--primary-color);
+  transition: all 0.3s ease;
 }

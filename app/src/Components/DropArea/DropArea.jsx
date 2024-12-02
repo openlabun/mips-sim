@@ -21,7 +21,7 @@ const DropArea = ({ setMipsInput, setHexInput }) => {
       }}
       onDrop={(e) => handleDrop(e, setIsHighlight, setMipsInput, setHexInput)}
       onMouseEnter={() =>
-        (document.getElementById("dropArea").style.color = "#f1faee")
+        (document.getElementById("dropArea").style.color = "#26547c")
       }
       onMouseLeave={() =>
         (document.getElementById("dropArea").style.color = "")
