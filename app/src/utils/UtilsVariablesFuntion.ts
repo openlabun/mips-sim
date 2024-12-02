@@ -326,6 +326,28 @@ export function assignInstructionVariables(instruction: string): InstructionVari
     const hexInstruction = translateInstructionToHex(instruction);
     const binaryInstruction = hexToBinary(hexInstruction);
     variables.IntructionRegister = binaryInstruction.padStart(32, '0');
+
+
+    switch (variables.ALUControl) {
+      case "0010": // add
+        variables.ALUResult = 1; 
+        break;
+      case "0110": // sub
+        variables.ALUResult = 2; 
+        break;
+      case "0000": // and
+        variables.ALUResult = 3; 
+        break;
+      case "0001": // or
+        variables.ALUResult = 4; 
+        break;
+      case "0111": // slt
+        variables.ALUResult = 5; 
+        break;
+      default:
+        variables.ALUResult = 0;
+    }
+
     return variables;
   } else {
     return instructionMap.else;
