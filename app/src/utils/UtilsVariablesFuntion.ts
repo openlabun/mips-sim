@@ -1,7 +1,7 @@
 import { translateInstructionToHex } from './TranslatorFunctions';
 import { hexToBinary } from './UtilityFunctions';
 
-interface InstructionVariables {
+export interface InstructionVariables {
   PCwrite: number;
   PcWriteCond: number;
   lorD: number;
@@ -13,16 +13,12 @@ interface InstructionVariables {
   TargetWrite: number;
   ALUOp: string;
   ALUSelB: string;
-  ALUSelA: number;
+  ALUSelA: string;
   RegWrite: number;
   RegDst: number;
-  Pcsource: number;
   ALUControl: string;
   ALUResult: number;
   OPCode: string;
-  RegWriteData: number;
-  MemReadData: number;
-  MemWriteData: number;
   IntructionRegister: string;
 }
 
@@ -35,21 +31,17 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemRead: 0,
       MemWrite: 0,
       IRWrite: 0,
-      MemToReg: 0,
+      MemToReg: "00",
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "10",
       ALUSelB: "00",
-      ALUSelA: 1,
+      ALUSelA: "01",
       RegWrite: 1,
-      RegDst: 1,
-      Pcsource: 0,
+      RegDst: "01",
       ALUControl: "0010",
       ALUResult: 0,
       OPCode: "000000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     sub: {
@@ -59,21 +51,17 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemRead: 0,
       MemWrite: 0,
       IRWrite: 0,
-      MemToReg: 0,
+      MemToReg: "00",
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "10",
       ALUSelB: "00",
-      ALUSelA: 1,
+      ALUSelA: "01",
       RegWrite: 1,
-      RegDst: 1,
-      Pcsource: 0,
+      RegDst: "01",
       ALUControl: "0110",
       ALUResult: 0,
       OPCode: "000000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     slt: {
@@ -83,21 +71,17 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemRead: 0,
       MemWrite: 0,
       IRWrite: 0,
-      MemToReg: 0,
+      MemToReg: "00",
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "10",
       ALUSelB: "00",
-      ALUSelA: 1,
+      ALUSelA: "01",
       RegWrite: 1,
-      RegDst: 1,
-      Pcsource: 0,
+      RegDst: "01",
       ALUControl: "0111",
       ALUResult: 0,
       OPCode: "000000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     and: {
@@ -107,21 +91,17 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemRead: 0,
       MemWrite: 0,
       IRWrite: 0,
-      MemToReg: 0,
+      MemToReg: "00",
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "10",
       ALUSelB: "00",
-      ALUSelA: 1,
+      ALUSelA: "01",
       RegWrite: 1,
-      RegDst: 1,
-      Pcsource: 0,
+      RegDst: "01",
       ALUControl: "0000",
       ALUResult: 0,
       OPCode: "000000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     or: {
@@ -131,15 +111,14 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemRead: 0,
       MemWrite: 0,
       IRWrite: 0,
-      MemToReg: 0,
+      MemToReg: "00",
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "10",
       ALUSelB: "00",
-      ALUSelA: 1,
+      ALUSelA: "01",
       RegWrite: 1,
-      RegDst: 1,
-      Pcsource: 0,
+      RegDst: "01",
       ALUControl: "0001",
       ALUResult: 0,
       OPCode: "000000",
@@ -155,27 +134,23 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemRead: 0,
       MemWrite: 0,
       IRWrite: 0,
-      MemToReg: 0,
+      MemToReg: "00",
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "00",
-      ALUSelB: "10",
-      ALUSelA: 1,
+      ALUSelB: "00",
+      ALUSelA: "01",
       RegWrite: 1,
-      RegDst: 0,
-      Pcsource: 0,
+      RegDst: "01",
       ALUControl: "0010",
       ALUResult: 0,
       OPCode: "001000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     lw: {
       PCwrite: 0,
       PcWriteCond: 0,
-      lorD: 1,
+      lorD: "01",
       MemRead: 1,
       MemWrite: 0,
       IRWrite: 1,
@@ -199,25 +174,21 @@ export function assignInstructionVariables(instruction: string): InstructionVari
     sw: {
       PCwrite: 0,
       PcWriteCond: 0,
-      lorD: 1,
-      MemRead: 0,
-      MemWrite: 1,
+      lorD: 0,
+      MemRead: 1,
+      MemWrite: 0,
       IRWrite: 0,
       MemToReg: 0,
       PCsource: 0,
       TargetWrite: 0,
       ALUOp: "00",
       ALUSelB: "10",
-      ALUSelA: 0,
+      ALUSelA: "01",
       RegWrite: 0,
       RegDst: 0,
-      Pcsource: 0,
       ALUControl: "0010",
       ALUResult: 0,
       OPCode: "101011",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     beq: {
@@ -235,13 +206,9 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUSelA: 1,
       RegWrite: 0,
       RegDst: 0,
-      Pcsource: 1,
       ALUControl: "0110",
       ALUResult: 0,
       OPCode: "000100",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     bne: {
@@ -252,20 +219,16 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemWrite: 0,
       IRWrite: 0,
       MemToReg: 0,
-      PCsource: 1,
+      PCsource: "01",
       TargetWrite: 0,
       ALUOp: "01",
       ALUSelB: "00",
-      ALUSelA: 1,
+      ALUSelA: "01",
       RegWrite: 0,
       RegDst: 0,
-      Pcsource: 1,
       ALUControl: "0110",
       ALUResult: 0,
       OPCode: "000101",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     j: {
@@ -276,14 +239,13 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       MemWrite: 0,
       IRWrite: 0,
       MemToReg: 0,
-      PCsource: 2,
+      PCsource: "10",
       TargetWrite: 0,
       ALUOp: "00",
       ALUSelB: "00",
       ALUSelA: 0,
       RegWrite: 0,
       RegDst: 0,
-      Pcsource: 2,
       ALUControl: "0000",
       ALUResult: 0,
       OPCode: "000010",
@@ -304,16 +266,12 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       TargetWrite: 0,
       ALUOp: "00",
       ALUSelB: "00",
-      ALUSelA: 0,
+      ALUSelA: "00",
       RegWrite: 0,
       RegDst: 0,
-      Pcsource: 0,
       ALUControl: "0000",
       ALUResult: 0,
       OPCode: "000000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     }
   };

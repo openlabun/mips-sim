@@ -92,9 +92,9 @@ const MIPSApp = () => {
   const [currentImage, setCurrentImage] = useState("Base.png");
   const [time, setTime] = useState(1000);
   useEffect(() => {
-    setImages(ImageSelector(currentInstruction));
-    setCurrentImage(images[0]);
-  }, [currentInstruction, images]);
+    const selectedImage = ImageSelector(currentInstruction);
+    setCurrentImage(selectedImage);
+  }, [currentInstruction]);
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
     setMemory(newMemory);
@@ -129,7 +129,7 @@ const MIPSApp = () => {
       ...history,
       { PC, registers: { ...registers }, memory: { ...memory } },
     ]);
-
+    
     setCurrentInstruction(instructions[PC]);
     const newPc = executeMIPSInstruction(
       instructions[PC],
