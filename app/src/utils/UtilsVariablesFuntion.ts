@@ -1,4 +1,4 @@
-interface InstructionVariables {
+export interface InstructionVariables {
   PCwrite: number;
   PcWriteCond: number;
   lorD: number;
@@ -23,7 +23,9 @@ interface InstructionVariables {
   IntructionRegisterValue: number;
 }
 
-export function assignInstructionVariables(instruction: string): InstructionVariables {
+export function assignInstructionVariables(
+  instruction: string
+): InstructionVariables {
   const instructionMap = {
     add: {
       PCwrite: 0,
@@ -47,7 +49,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWriteData: 0,
       MemReadData: 0,
       MemWriteData: 0,
-      IntructionRegisterValue: parseInt(instruction, 2) || 0
+      IntructionRegisterValue: parseInt(instruction, 2) || 0,
     },
     sub: {
       PCwrite: 0,
@@ -71,7 +73,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWriteData: 0,
       MemReadData: 0,
       MemWriteData: 0,
-      IntructionRegisterValue: parseInt(instruction, 2) || 0
+      IntructionRegisterValue: parseInt(instruction, 2) || 0,
     },
     and: {
       PCwrite: 0,
@@ -95,7 +97,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWriteData: 0,
       MemReadData: 0,
       MemWriteData: 0,
-      IntructionRegisterValue: parseInt(instruction, 2) || 0
+      IntructionRegisterValue: parseInt(instruction, 2) || 0,
     },
     or: {
       PCwrite: 0,
@@ -119,7 +121,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWriteData: 0,
       MemReadData: 0,
       MemWriteData: 0,
-      IntructionRegisterValue: parseInt(instruction, 2) || 0
+      IntructionRegisterValue: parseInt(instruction, 2) || 0,
     },
     slt: {
       PCwrite: 0,
@@ -143,7 +145,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWriteData: 0,
       MemReadData: 0,
       MemWriteData: 0,
-      IntructionRegisterValue: parseInt(instruction, 2) || 0
+      IntructionRegisterValue: parseInt(instruction, 2) || 0,
     },
     else: {
       PCwrite: 0,
@@ -167,8 +169,8 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWriteData: 0,
       MemReadData: 0,
       MemWriteData: 0,
-      IntructionRegisterValue: 0
-    }
+      IntructionRegisterValue: 0,
+    },
   };
 
   const instructionParts = instruction.split(" ");
