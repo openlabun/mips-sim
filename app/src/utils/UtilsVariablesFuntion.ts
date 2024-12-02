@@ -17,7 +17,6 @@ export interface InstructionVariables {
   RegWrite: number;
   RegDst: number;
   ALUControl: string;
-  ALUResult: number;
   OPCode: string;
   IntructionRegister: string;
 }
@@ -40,7 +39,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 1,
       RegDst: "01",
       ALUControl: "0010",
-      ALUResult: 0,
       OPCode: "000000",
       IntructionRegister: ""
     },
@@ -60,7 +58,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 1,
       RegDst: "01",
       ALUControl: "0110",
-      ALUResult: 0,
       OPCode: "000000",
       IntructionRegister: ""
     },
@@ -80,7 +77,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 1,
       RegDst: "01",
       ALUControl: "0111",
-      ALUResult: 0,
       OPCode: "000000",
       IntructionRegister: ""
     },
@@ -100,7 +96,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 1,
       RegDst: "01",
       ALUControl: "0000",
-      ALUResult: 0,
       OPCode: "000000",
       IntructionRegister: ""
     },
@@ -120,11 +115,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 1,
       RegDst: "01",
       ALUControl: "0001",
-      ALUResult: 0,
       OPCode: "000000",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     addi: {
@@ -143,7 +134,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 1,
       RegDst: "01",
       ALUControl: "0010",
-      ALUResult: 0,
       OPCode: "001000",
       IntructionRegister: ""
     },
@@ -164,11 +154,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegDst: 0,
       Pcsource: 0,
       ALUControl: "0010",
-      ALUResult: 0,
       OPCode: "100011",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     sw: {
@@ -187,7 +173,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 0,
       RegDst: 0,
       ALUControl: "0010",
-      ALUResult: 0,
       OPCode: "101011",
       IntructionRegister: ""
     },
@@ -207,7 +192,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 0,
       RegDst: 0,
       ALUControl: "0110",
-      ALUResult: 0,
       OPCode: "000100",
       IntructionRegister: ""
     },
@@ -227,7 +211,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 0,
       RegDst: 0,
       ALUControl: "0110",
-      ALUResult: 0,
       OPCode: "000101",
       IntructionRegister: ""
     },
@@ -247,11 +230,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 0,
       RegDst: 0,
       ALUControl: "0000",
-      ALUResult: 0,
       OPCode: "000010",
-      RegWriteData: 0,
-      MemReadData: 0,
-      MemWriteData: 0,
       IntructionRegister: ""
     },
     else: {
@@ -270,7 +249,6 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       RegWrite: 0,
       RegDst: 0,
       ALUControl: "0000",
-      ALUResult: 0,
       OPCode: "000000",
       IntructionRegister: ""
     }
