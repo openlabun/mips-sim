@@ -15,7 +15,7 @@ const Debugger = ({
 
   return (
     <div id="debugger" className="debugger">
-      <h2>Debugger</h2>
+      <h2 className=" text-2xl font-bold mb-5">Debugger</h2>
       <ControlButtons
         stepMIPS={stepMIPS}
         stepBackMIPS={stepBackMIPS}
