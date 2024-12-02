@@ -191,6 +191,7 @@ const MIPSApp = () => {
         </div>
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
       </section>
+      <h2 className=" ml-8 text-6xl font-bold">PC: {PC}</h2>
       <ImageManager image={currentImage} instruction={currentInstruction} />
       {/* If you want to use the canvas uncomment the following code and comment the last one*/}
       {/* <CanvasProvider>
