@@ -1,4 +1,4 @@
-export interface InstructionVariables {
+interface InstructionVariables {
   PCwrite: number;
   PcWriteCond: number;
   lorD: number;
@@ -12,10 +12,18 @@ export interface InstructionVariables {
   ALUSelB: string;
   ALUSelA: number;
   RegWrite: number;
-  Pcsource: number;
   RegDst: number;
+  Pcsource: number;
+  ALUControl: string;
+  ALUResult: number;
+  OPCode: string;
+  RegWriteData: number;
+  MemReadData: number;
+  MemWriteData: number;
+  IntructionRegisterValue: number;
 }
-export function assignInstructionVariables(instruction): InstructionVariables {
+
+export function assignInstructionVariables(instruction: string): InstructionVariables {
   const instructionMap = {
     add: {
       PCwrite: 0,
@@ -32,6 +40,14 @@ export function assignInstructionVariables(instruction): InstructionVariables {
       ALUSelA: 1,
       RegWrite: 1,
       RegDst: 1,
+      Pcsource: 0,
+      ALUControl: "0010",
+      ALUResult: 0,
+      OPCode: "000000",
+      RegWriteData: 0,
+      MemReadData: 0,
+      MemWriteData: 0,
+      IntructionRegisterValue: parseInt(instruction, 2) || 0
     },
     sub: {
       PCwrite: 0,
@@ -48,22 +64,14 @@ export function assignInstructionVariables(instruction): InstructionVariables {
       ALUSelA: 1,
       RegWrite: 1,
       RegDst: 1,
-    },
-    slt: {
-      PCwrite: 0,
-      PcWriteCond: 0,
-      lorD: 0,
-      MemRead: 0,
-      MemWrite: 0,
-      IRWrite: 0,
-      MemToReg: 0,
-      PCsource: 0,
-      TargetWrite: 0,
-      ALUOp: "10",
-      ALUSelB: "00",
-      ALUSelA: 1,
-      RegWrite: 1,
-      RegDst: 1,
+      Pcsource: 0,
+      ALUControl: "0110",
+      ALUResult: 0,
+      OPCode: "000001",
+      RegWriteData: 0,
+      MemReadData: 0,
+      MemWriteData: 0,
+      IntructionRegisterValue: parseInt(instruction, 2) || 0
     },
     and: {
       PCwrite: 0,
@@ -80,6 +88,14 @@ export function assignInstructionVariables(instruction): InstructionVariables {
       ALUSelA: 1,
       RegWrite: 1,
       RegDst: 1,
+      Pcsource: 0,
+      ALUControl: "0000",
+      ALUResult: 0,
+      OPCode: "000010",
+      RegWriteData: 0,
+      MemReadData: 0,
+      MemWriteData: 0,
+      IntructionRegisterValue: parseInt(instruction, 2) || 0
     },
     or: {
       PCwrite: 0,
@@ -96,8 +112,16 @@ export function assignInstructionVariables(instruction): InstructionVariables {
       ALUSelA: 1,
       RegWrite: 1,
       RegDst: 1,
+      Pcsource: 0,
+      ALUControl: "0001",
+      ALUResult: 0,
+      OPCode: "000011",
+      RegWriteData: 0,
+      MemReadData: 0,
+      MemWriteData: 0,
+      IntructionRegisterValue: parseInt(instruction, 2) || 0
     },
-    addi: {
+    slt: {
       PCwrite: 0,
       PcWriteCond: 0,
       lorD: 0,
@@ -107,91 +131,19 @@ export function assignInstructionVariables(instruction): InstructionVariables {
       MemToReg: 0,
       PCsource: 0,
       TargetWrite: 0,
-      ALUOp: "00",
-      ALUSelB: "10",
+      ALUOp: "10",
+      ALUSelB: "00",
       ALUSelA: 1,
       RegWrite: 1,
-      RegDst: 0,
-    },
-    lw: {
-      PCwrite: 0,
-      PcWriteCond: 0,
-      lorD: 1,
-      MemRead: 1,
-      MemWrite: 0,
-      IRWrite: 1,
-      MemToReg: 1,
-      PCsource: 0,
-      TargetWrite: 0,
-      ALUOp: "00",
-      ALUSelB: "10",
-      ALUSelA: 0,
-      RegWrite: 1,
-      RegDst: 0,
-    },
-    sw: {
-      PCwrite: 0,
-      PcWriteCond: 0,
-      lorD: 1,
-      MemRead: 0,
-      MemWrite: 1,
-      IRWrite: 0,
-      MemToReg: 0,
-      PCsource: 0,
-      TargetWrite: 0,
-      ALUOp: "00",
-      ALUSelB: "10",
-      ALUSelA: 0,
-      RegWrite: 0,
-      RegDst: 0,
-    },
-    beq: {
-      PCwrite: 0,
-      PcWriteCond: 1,
-      lorD: 0,
-      MemRead: 0,
-      MemWrite: 0,
-      IRWrite: 0,
-      MemToReg: 0,
-      PCsource: 1,
-      TargetWrite: 0,
-      ALUOp: "01",
-      ALUSelB: "00",
-      ALUSelA: 1,
-      RegWrite: 0,
-      RegDst: 0,
-    },
-    bne: {
-      PCwrite: 0,
-      PcWriteCond: 1,
-      lorD: 0,
-      MemRead: 0,
-      MemWrite: 0,
-      IRWrite: 0,
-      MemToReg: 0,
-      PCsource: 1,
-      TargetWrite: 0,
-      ALUOp: "01",
-      ALUSelB: "00",
-      ALUSelA: 1,
-      RegWrite: 0,
-      RegDst: 0,
-    },
-    j: {
-      PCwrite: 1,
-      PcWriteCond: 0,
-      lorD: 0,
-      MemRead: 0,
-      MemWrite: 0,
-      IRWrite: 0,
-      MemToReg: 0,
-      PCsource: 2,
-      TargetWrite: 0,
-      ALUOp: "00",
-      ALUSelB: "00",
-      ALUSelA: 0,
-      RegWrite: 0,
-      RegDst: 0,
+      RegDst: 1,
+      Pcsource: 0,
+      ALUControl: "0111",
+      ALUResult: 0,
+      OPCode: "000100",
+      RegWriteData: 0,
+      MemReadData: 0,
+      MemWriteData: 0,
+      IntructionRegisterValue: parseInt(instruction, 2) || 0
     },
     else: {
       PCwrite: 0,
@@ -209,7 +161,14 @@ export function assignInstructionVariables(instruction): InstructionVariables {
       RegWrite: 0,
       RegDst: 0,
       Pcsource: 0,
-    },
+      ALUControl: "0000",
+      ALUResult: 0,
+      OPCode: "000000",
+      RegWriteData: 0,
+      MemReadData: 0,
+      MemWriteData: 0,
+      IntructionRegisterValue: 0
+    }
   };
 
   const instructionParts = instruction.split(" ");
