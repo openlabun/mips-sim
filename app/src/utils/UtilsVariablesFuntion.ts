@@ -278,7 +278,7 @@ export function assignInstructionVariables(
     const variables = instructionMap[instructionType];
     const hexInstruction = translateInstructionToHex(instruction);
     const binaryInstruction = hexToBinary(hexInstruction);
-    variables.IntructionRegister = binaryInstruction.padStart(32, "0");
+    variables.InstructionRegister = binaryInstruction.padStart(32, "0");
 
     const aluResult = getAluResult();
     variables.ALUResult = aluResult;
