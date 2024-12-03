@@ -1,6 +1,7 @@
 import { translateInstructionToHex } from './TranslatorFunctions';
 import { hexToBinary } from './UtilityFunctions';
-import { executeMIPSInstruction } from './DebuggerFunctions';
+import { executeMIPSInstruction } from '../MipsApps/MipsApps';
+import { getAluResult } from './ALUResultStore';
 
 export interface InstructionVariables {
   PCwrite: number;
@@ -23,7 +24,7 @@ export interface InstructionVariables {
   IntructionRegister: string;
 }
 
-export function assignInstructionVariables(instruction: string, aluResult: number): InstructionVariables {
+export function assignInstructionVariables(instruction: string): InstructionVariables {
   const instructionMap = {
     add: {
       PCwrite: 0,
@@ -268,6 +269,7 @@ export function assignInstructionVariables(instruction: string, aluResult: numbe
     }
   };
 
+
   const instructionParts = instruction.split(" ");
   const instructionType = instructionParts[0];
 
@@ -276,6 +278,8 @@ export function assignInstructionVariables(instruction: string, aluResult: numbe
     const hexInstruction = translateInstructionToHex(instruction);
     const binaryInstruction = hexToBinary(hexInstruction);
     variables.IntructionRegister = binaryInstruction.padStart(32, '0');
+
+    const aluResult = getAluResult();
     variables.ALUResult = aluResult;
 
     return variables;

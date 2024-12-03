@@ -30,7 +30,7 @@ const Debugger = ({
       <DebuggerInfo PC={PC} instructions={instructions} />
       <div className="card flex justify-content-center">
         <div className="w-14rem">
-          <p2>Segundos por imagen</p2>
+          <p>Segundos por imagen</p>
           <InputText
             value={value}
             onChange={(e) => setValue(e.target.value)}

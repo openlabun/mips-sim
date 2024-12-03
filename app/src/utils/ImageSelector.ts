@@ -19,7 +19,6 @@ const value = {
 
 export const ImageSelector = (instruction: string): string[] => {
   const key = instruction.split(" ")[0];
-  const images = value[key] || value["else"];
-  console.log(images);
-  return images[images.length - 1];
+  console.log(value[key] || value["else"]);
+  return value[key] || value["else"];
 };

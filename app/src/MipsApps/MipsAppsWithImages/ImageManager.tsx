@@ -8,7 +8,7 @@ import {
 } from "../../utils/UtilsVariablesFuntion";
 import { Chips, ChipsChangeEvent } from "primereact/chips";
 import { FloatLabel } from "primereact/floatlabel";
-export const ImageManager = ({ image, instruction = "", aluResult }) => {
+export const ImageManager = ({ image, instruction = ""}) => {
   const [vars, setVars] = useState<InstructionVariables | {}>({});
   const [variables, setVariables] = useState<propsEl[]>([]);
   const [value, setValue] = useState<string[]>([]);
@@ -31,7 +31,6 @@ export const ImageManager = ({ image, instruction = "", aluResult }) => {
   useEffect(() => {
     const assignedVars = assignInstructionVariables(
       instruction,
-      aluResult
     ) as InstructionVariables;
     setVars(assignedVars);
     const newVariables = Object.keys(assignedVars).map((key) => ({
@@ -40,12 +39,12 @@ export const ImageManager = ({ image, instruction = "", aluResult }) => {
     }));
     setVariables(newVariables);
     console.log(newVariables);
-  }, [instruction, aluResult]);
+  }, [instruction]);
 
   return (
     <section className="flex flex-col justify-center items-center">
       <div className="px-40">
-        <img src={"/" + image} className="block" alt="" />
+        <img src={`/${image}`} className="block" alt="MIPS Stage" />
       </div>
       <div className="card p-fluid pb-10">
         <FloatLabel>
