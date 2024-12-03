@@ -131,8 +131,7 @@ const MIPSApp = () => {
       ...history,
       { PC, registers: { ...registers }, memory: { ...memory } },
     ]);
-    
-    
+
     setCurrentInstruction(instructions[PC]);
     const result = executeMIPSInstruction(
       instructions[PC],
@@ -140,9 +139,9 @@ const MIPSApp = () => {
       newMemory,
       PC
     );
-
+    console.log("Registers", newRegisters);
     let newPc = PC + 1;
-  
+
     if (result && result.newPC !== undefined) {
       newPc = result.newPC;
     }
@@ -194,13 +193,6 @@ const MIPSApp = () => {
             value={mipsInput}
             onChange={(e) => setMipsInput(e.target.value)}
           />
-          <button
-            id="simulate-mips-button"
-            className="btn"
-            onClick={simulateMIPS}
-          >
-            Simulate MIPS
-          </button>
         </div>
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
       </section>
@@ -271,7 +263,8 @@ export function executeMIPSInstruction(instruction, registers, memory, PC) {
       break;
     }
     case "lw": {
-      const [rt, rs, offset] = operands;
+      const [rt, offset, rs] = operands;
+
       const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         aluResult = memory[address];
@@ -282,8 +275,10 @@ export function executeMIPSInstruction(instruction, registers, memory, PC) {
       break;
     }
     case "sw": {
-      const [rt, rs, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
+      const [rt, offset, rs] = operands;
+      console.log("offset" + offset);
+      const address = registers[rs] + parseInt(offset, 16);
+
       aluResult = registers[rt];
       memory[address] = aluResult;
       break;
@@ -316,6 +311,3 @@ export function executeMIPSInstruction(instruction, registers, memory, PC) {
 }
 
 export default MIPSApp;
-
-
-
