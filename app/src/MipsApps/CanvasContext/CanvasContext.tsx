@@ -207,9 +207,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({ children }) => {
     return id;
   };
 
-  const generateUniqueId = (): string => {
-    return `element-${Math.random().toString(36).substr(2, 9)}`;
-  };
+  
   const getElementById = (id: string): CanvasElement | undefined => {
     return elements[id];
   };

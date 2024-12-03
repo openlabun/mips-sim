@@ -1,7 +1,7 @@
-import { translateInstructionToHex } from './TranslatorFunctions';
-import { hexToBinary } from './UtilityFunctions';
-import { executeMIPSInstruction } from '../MipsApps/MipsApps';
-import { getAluResult } from './ALUResultStore';
+import { translateInstructionToHex } from "./TranslatorFunctions";
+import { hexToBinary } from "./UtilityFunctions";
+import { executeMIPSInstruction } from "../MipsApps/MipsApps";
+import { getAluResult } from "./ALUResultStore";
 
 export interface InstructionVariables {
   PCwrite: number;
@@ -21,10 +21,12 @@ export interface InstructionVariables {
   ALUControl: string;
   OPCode: string;
   ALUResult: number;
-  IntructionRegister: string;
+  InstructionRegister: string;
 }
 
-export function assignInstructionVariables(instruction: string): InstructionVariables {
+export function assignInstructionVariables(
+  instruction: string
+): InstructionVariables {
   const instructionMap = {
     add: {
       PCwrite: 0,
@@ -44,7 +46,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0010",
       OPCode: "000000",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     sub: {
       PCwrite: 0,
@@ -64,7 +66,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0110",
       OPCode: "000000",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     slt: {
       PCwrite: 0,
@@ -84,7 +86,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0111",
       OPCode: "000000",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     and: {
       PCwrite: 0,
@@ -104,7 +106,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0000",
       OPCode: "000000",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     or: {
       PCwrite: 0,
@@ -124,7 +126,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0001",
       OPCode: "000000",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     addi: {
       PCwrite: 0,
@@ -144,7 +146,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0010",
       OPCode: "001000",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     lw: {
       PCwrite: 0,
@@ -165,7 +167,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0010",
       OPCode: "100011",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     sw: {
       PCwrite: 0,
@@ -185,7 +187,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0010",
       OPCode: "101011",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     beq: {
       PCwrite: 0,
@@ -205,7 +207,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0110",
       OPCode: "000100",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     bne: {
       PCwrite: 0,
@@ -225,7 +227,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0110",
       OPCode: "000101",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     j: {
       PCwrite: 1,
@@ -245,7 +247,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0000",
       OPCode: "000010",
       ALUResult: 0,
-      IntructionRegister: ""
+      InstructionRegister: "",
     },
     else: {
       PCwrite: 0,
@@ -265,10 +267,9 @@ export function assignInstructionVariables(instruction: string): InstructionVari
       ALUControl: "0000",
       OPCode: "000000",
       ALUResult: 0,
-      IntructionRegister: ""
-    }
+      InstructionRegister: "",
+    },
   };
-
 
   const instructionParts = instruction.split(" ");
   const instructionType = instructionParts[0];
@@ -277,7 +278,7 @@ export function assignInstructionVariables(instruction: string): InstructionVari
     const variables = instructionMap[instructionType];
     const hexInstruction = translateInstructionToHex(instruction);
     const binaryInstruction = hexToBinary(hexInstruction);
-    variables.IntructionRegister = binaryInstruction.padStart(32, '0');
+    variables.IntructionRegister = binaryInstruction.padStart(32, "0");
 
     const aluResult = getAluResult();
     variables.ALUResult = aluResult;
