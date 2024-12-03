@@ -139,7 +139,7 @@ const MIPSApp = () => {
       newMemory,
       PC
     );
-    console.log("Registers", newRegisters);
+    
     let newPc = PC + 1;
 
     if (result && result.newPC !== undefined) {
@@ -276,7 +276,7 @@ export function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "sw": {
       const [rt, offset, rs] = operands;
-      console.log("offset" + offset);
+      
       const address = registers[rs] + parseInt(offset, 16);
 
       aluResult = registers[rt];
