@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Debugger from "../Debugger";
-import "./SimulationTables.css";
+import "./Simulationtables.css";
 
 const SimulationTables = ({
   registers,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./imageManager.css";
+import "./ImageManager.css";
 import { PopUpBase } from "./PopUpBase";
 import { propsEl } from "./PopUpBase/PopUpBase";
 import {
