@@ -1,0 +1,36 @@
+@layer tailwind-base, primereact, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+:root {
+  --primary-color: #26547c;
+  --secondary-color: #ef476f;
+  --white-color: #fcfcfc;
+}
+html {
+  color: var(--primary-color);
+  background-color: var(--white-color);
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  backdrop-filter: blur(10px);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  backdrop-filter: blur(10px);
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+  transition: all 0.3s ease;
+}
