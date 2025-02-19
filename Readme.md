@@ -1,4 +1,4 @@
-MIPS Visual Simulator
+MIPS Visual Simulator (Pipeline)
 
 
 A javascript based MIPS simulator that can simulate the MIPS assembly code. 
