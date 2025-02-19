@@ -1,10 +1,20 @@
 MIPS Visual Simulator
 
 
-A javascript based MIPS simulator that can simulate the MIPS assembly code. It can simulate the following MIPS instructions:
+A javascript based MIPS simulator that can simulate the MIPS assembly code. 
 
-1. Arithmetic Instructions (R-Type and I-Type)
-   
+To run on dev mode, run the following command
+```bash
+ cd app
+ nmp install
+ npm run dev 
+```
+
+To deply the app, run the following command
+```bash
+ docker build -t mipsvisualsimi .
+ docker run -d -it -p 80:3000 --restart unless-stopped --name mipsvisualsim-app mipsvisualsimi
+```
 
 # Test instructions
 ```assembly
