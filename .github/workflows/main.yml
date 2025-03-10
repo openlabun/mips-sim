@@ -2,9 +2,9 @@ name: Deploy
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the singleCycle branch
   push:
-    branches: [ main ]
+    branches: [ singleCycle ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -31,10 +31,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/proyecto/MIPSVisualSim/
-          git pull origin main
+          cd /home/proyecto/mips-sim/
+          git pull
           git status
-          docker stop mipsvisualsim-app
-          docker rm mipsvisualsim-app
-          docker build -t mipsvisualsimi .
-          docker run -d -it -p 5021:3000 --restart unless-stopped --name mipsvisualsim-app mipsvisualsimi
+          docker stop mips-sim-app
+          docker rm mips-sim-app
+          docker build -t mips-sim-i .
+          docker run -d -it -p 5024:3000 --restart unless-stopped --name mips-sim-app mips-sim-i
