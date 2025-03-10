@@ -14,7 +14,6 @@ To deply the app, run the following command
 ```bash
  docker build -t mipsvisualsimisinglei .
  docker run -d -it -p 80:3000 --restart unless-stopped --name mipsvisualsimisingle-app mipsvisualsimisinglei
-```
 
 # Test instructions
 ```assembly
