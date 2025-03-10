@@ -31,10 +31,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/proyecto/MIPSVisualSimSingle/
+          cd /home/proyecto/mips-sim/
           git pull
           git status
-          docker stop mipsvisualsimisingle-app
-          docker rm mipsvisualsimisingle-app
-          docker build -t mipsvisualsimisinglei .
-          docker run -d -it -p 5024:3000 --restart unless-stopped --name mipsvisualsimisingle-app mipsvisualsimisinglei
+          docker stop mips-sim-app
+          docker rm mips-sim-app
+          docker build -t mips-sim-i .
+          docker run -d -it -p 5024:3000 --restart unless-stopped --name mips-sim-app mips-sim-i
