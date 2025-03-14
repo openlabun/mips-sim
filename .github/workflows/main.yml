@@ -36,5 +36,5 @@ jobs:
           git status
           docker stop mips-sim-app
           docker rm mips-sim-app
-          docker build -t mips-sim-i .
-          docker run -d -it -p 5024:3000 --restart unless-stopped --name mips-sim-app mips-sim-i
+          docker build -t mips-sim-image .
+          docker run -d -it -p 5024:3000 --restart unless-stopped --name mips-sim mips-sim-image
