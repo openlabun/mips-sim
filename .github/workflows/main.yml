@@ -4,7 +4,7 @@ name: Deploy
 on:
   # Triggers the workflow on push or pull request events but only for the singleCycle branch
   push:
-    branches: [ singleCycle ]
+    branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,7 +34,7 @@ jobs:
           cd /home/proyecto/mips-sim/
           git pull
           git status
-          docker stop mips-sim-app
-          docker rm mips-sim-app
-          docker build -t mips-sim-image .
-          docker run -d -it -p 5024:3000 --restart unless-stopped --name mips-sim mips-sim-image
+          docker stop mipssim
+          docker rm mipssim
+          docker build -t mipssim-image .
+          docker run -d -it -p 5024:3000 --restart unless-stopped --name mipssim mipssim-image
