@@ -37,6 +37,16 @@ function getChangedKey(prevState, currState) {
 }
 
 const MIPS = () => {
+  //Visulaizer constants
+  const [visualization, setVisualization] = useState({
+    regA: null,
+    regB: null,
+    aluResult: null,
+  });
+  // Function to update the visualization state
+  const updateVisualization = (regA=null, regB = null, aluResult = null) => {
+    setVisualization({ regA, regB, aluResult });
+  };
   const [mipsInput, setMipsInput] = useState("");
   const [hexInput, setHexInput] = useState("");
   const [registers, setRegisters] = useState(initialRegisters);
@@ -84,7 +94,7 @@ const MIPS = () => {
     let pc = 0;
 
     while (pc < hexInstructions.length) {
-      const newPC = executeMIPSInstruction(hexInstructions[pc], newRegisters, newMemory, pc);
+      const newPC = executeMIPSInstruction(hexInstructions[pc], newRegisters, newMemory, pc,updateVisualization);
       if (newPC !== undefined) {
         pc = newPC;
       } else {
@@ -105,7 +115,7 @@ const MIPS = () => {
   
     const newRegisters = { ...registers };
     const newMemory = { ...memory };
-    const newPC = executeMIPSInstruction(instructions[PC], newRegisters, newMemory, PC);
+    const newPC = executeMIPSInstruction(instructions[PC], newRegisters, newMemory, PC, updateVisualization);
   
     if (newPC !== undefined) {
       console.log(newPC);
@@ -143,6 +153,7 @@ const MIPS = () => {
 
   return (
     <div>
+      <Visualization {...visualization}/>
       <div className="row-container">
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
         <textarea
@@ -177,7 +188,7 @@ const MIPS = () => {
   );
 };
 
-function executeMIPSInstruction(instruction, registers, memory, PC) {
+function executeMIPSInstruction(instruction, registers, memory, PC,updateVisualization) {
   // Split MIPS instruction into operation and operands
   const [op, ...operands] = instruction.split(" ");
   // Implement execution logic for each MIPS operation
@@ -185,31 +196,37 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     case "add": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] + registers[rt];
+      updateVisualization(registers[rs], registers[rt], registers[rd]);
       break;
     }
     case "sub": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] - registers[rt];
+        updateVisualization(registers[rs], registers[rt], registers[rd]);
       break;
     }
     case "slt": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
+        updateVisualization(registers[rs], registers[rt], registers[rd]);
       break;
     }
     case "and": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] & registers[rt];
+        updateVisualization(registers[rs], registers[rt], registers[rd]);
       break;
     }
     case "or": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] | registers[rt];
+        updateVisualization(registers[rs], registers[rt], registers[rd]);
       break;
     }
     case "addi": {
       const [rd, rs, immediate] = operands;
       registers[rd] = registers[rs] + parseInt(immediate);
+      updateVisualization(registers[rs],null, registers[rd]);
       break;
     }
     case "lw": {
@@ -217,6 +234,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address];
+          updateVisualization(null,null,address);
       } else {
         console.error("Memory address not found:", address);
       }
@@ -226,14 +244,17 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       const [rt, rs, offset] = operands;
       const address = registers[rs] + parseInt(offset);
       memory[address] = registers[rt];
+        updateVisualization(null, registers[rt], address);
       break;
     }
     case "j": {
       const [address] = operands;
+      updateVisualization(null, null, null);
       return parseInt(address); 
     }
     case "beq": {
       const [rs, rt, offset] = operands;
+        updateVisualization(registers[rs], registers[rt], null);
       if (registers[rs] === registers[rt]) {
         return PC + parseInt(offset);
       }
@@ -241,6 +262,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "bne": {
       const [rs, rt, offset] = operands;
+        updateVisualization(registers[rs], registers[rt], null);
       if (registers[rs] !== registers[rt]) {
         return PC + parseInt(offset); 
       }
@@ -252,5 +274,16 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
   }
 }
+
+
+
+//componente para visualizar
+const Visualization = (visualization) => (
+  <div className="visualization">
+    {visualization.regA !== null && <h1>Register A (rs): {visualization.regA}</h1>}
+    {visualization.regB !== null && <h1>Register B (rt): {visualization.regB}</h1>}
+    {visualization.aluResult !== null && <h1>ALU Result: {visualization.aluResult}</h1>}
+  </div>
+);
 
 export default MIPS;
