@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Debugger from "./Debugger";
 import DropArea from "./Drop";
 import "../styles/MIPS.css";
@@ -22,6 +22,20 @@ const initialMemory = Array.from({ length: 32 }).reduce(
   {}
 );
 
+function getChangedKey(prevState, currState) {
+  for (const key in currState) {
+    if (currState[key] !== prevState[key]) {
+      return {
+        key: key,
+        oldValue: prevState[key],
+        newValue: currState[key]
+      };
+    }
+  }
+
+  return null; // No change detected
+}
+
 const MIPS = () => {
   const [mipsInput, setMipsInput] = useState("");
   const [hexInput, setHexInput] = useState("");
@@ -32,8 +46,28 @@ const MIPS = () => {
   const instructions = mipsInput.trim().split("\n");
   const currentInstruction = instructions[PC] || '';
 
+  const [lastMemory, setLastMemory] = useState(initialMemory);
+  const [memoryOut, setMemoryOut] = useState("0x0")
+  useEffect(() => {
+    const out = getChangedKey(lastMemory, memory);
+    if (out)
+      setMemoryOut('0x' + out.newValue.toString(16).toUpperCase())
+  }, [memory])
+
+  useEffect(()=> {
+    // aqui iria el codigo para mostrar el valor en la interfaz
+    console.log(memoryOut)
+
+    const h1 = document.createElement('h1')
+    //h1.style
+    h1.style.position = "absolute"
+    //h1.style.top = window.innerWidth / 2;
+    //h1.style.left = 123;
+  }, [memoryOut])
+
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
+    setLastMemory(memory);
     setMemory(newMemory);
   };
 
@@ -93,6 +127,7 @@ const MIPS = () => {
     if (lastState) {
       setPC(lastState.PC);
       setRegisters(lastState.registers);
+      setLastMemory(memory);
       setMemory(lastState.memory);
       setHistory(history.slice(0, lastHistoryIndex));
     }
@@ -102,6 +137,7 @@ const MIPS = () => {
     setPC(0);
     setHistory([]);
     setRegisters(initialRegisters);
+    setLastMemory(memory);
     setMemory(initialMemory);
   };
 
