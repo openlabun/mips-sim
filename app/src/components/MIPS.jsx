@@ -37,7 +37,7 @@ function getChangedKey(prevState, currState) {
 }
 
 const MIPS = () => {
-  //Visulaizer constants
+  // Visualize constants
   const [visualization, setVisualization] = useState({
     regA: null,
     regB: null,
@@ -57,7 +57,7 @@ const MIPS = () => {
   const currentInstruction = instructions[PC] || '';
 
   const [lastMemory, setLastMemory] = useState(initialMemory);
-  const [memoryOut, setMemoryOut] = useState("0x0")
+  const [memoryOut, setMemoryOut] = useState("0x0");
   useEffect(() => {
     const out = getChangedKey(lastMemory, memory);
     if (out)
@@ -65,15 +65,8 @@ const MIPS = () => {
   }, [memory])
 
   useEffect(()=> {
-    // aqui iria el codigo para mostrar el valor en la interfaz
-    console.log(memoryOut)
-
-    const h1 = document.createElement('h1')
-    //h1.style
-    h1.style.position = "absolute"
-    //h1.style.top = window.innerWidth / 2;
-    //h1.style.left = 123;
-  }, [memoryOut])
+    console.log('ALU', visualization);
+  }, [visualization]);
 
   const updateTables = (newRegisters, newMemory) => {
     setRegisters(newRegisters);
@@ -118,7 +111,6 @@ const MIPS = () => {
     const newPC = executeMIPSInstruction(instructions[PC], newRegisters, newMemory, PC, updateVisualization);
   
     if (newPC !== undefined) {
-      console.log(newPC);
       setPC(newPC);
 
     }else {
@@ -153,7 +145,6 @@ const MIPS = () => {
 
   return (
     <div>
-      <Visualization {...visualization}/>
       <div className="row-container">
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
         <textarea
@@ -171,7 +162,12 @@ const MIPS = () => {
           Simulate MIPS
         </button>
       </div>
-      <CircuitImage currentInstruction={currentInstruction} registers={registers} />
+      <CircuitImage
+        PC={PC}
+        visualization={visualization}
+        memoryOut={memoryOut} 
+        currentInstruction={currentInstruction} 
+        registers={registers} />
       <div className="bottom-section">
         <RAMtable memory={memory} />
         <Debugger
@@ -188,7 +184,7 @@ const MIPS = () => {
   );
 };
 
-function executeMIPSInstruction(instruction, registers, memory, PC,updateVisualization) {
+function executeMIPSInstruction(instruction, registers, memory, PC, updateVisualization) {
   // Split MIPS instruction into operation and operands
   const [op, ...operands] = instruction.split(" ");
   // Implement execution logic for each MIPS operation
@@ -226,7 +222,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC,updateVisuali
     case "addi": {
       const [rd, rs, immediate] = operands;
       registers[rd] = registers[rs] + parseInt(immediate);
-      updateVisualization(registers[rs],null, registers[rd]);
+      updateVisualization(registers[rs], null, registers[rd]);
       break;
     }
     case "lw": {
@@ -274,16 +270,5 @@ function executeMIPSInstruction(instruction, registers, memory, PC,updateVisuali
     }
   }
 }
-
-
-
-//componente para visualizar
-const Visualization = (visualization) => (
-  <div className="visualization">
-    {visualization.regA !== null && <h1>Register A (rs): {visualization.regA}</h1>}
-    {visualization.regB !== null && <h1>Register B (rt): {visualization.regB}</h1>}
-    {visualization.aluResult !== null && <h1>ALU Result: {visualization.aluResult}</h1>}
-  </div>
-);
 
 export default MIPS;
