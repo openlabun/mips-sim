@@ -60,3 +60,124 @@
   top: 62%;
   left: 38.6%;
 }
+
+.label-outputs {
+  position: absolute;
+  z-index: 40;
+  font-size: 0.8vw;
+  font-weight: bold;
+  color: black;
+}
+
+.label-outputs.regA {
+  top: 38.4%;
+  left: 42.5%;
+}
+
+.label-outputs.regB {
+  top: 50.3%;
+  left: 42.5%;
+}
+
+.label-outputs.ALU {
+  top: 52%;
+  left: 64.3%;
+}
+
+.label-outputs.memRead {
+  top: 51.3%;
+  left: 83.6%;
+}
+
+.label-outputs.regWrite {
+  top: 76.5%;
+  left: 86%;
+}
+
+.label-outputs-value {
+  position: absolute;
+  z-index: 50;
+  font-size: 1vw;
+  background-color: rgb(212, 212, 212);
+  padding: 1px 3px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transform: translate(0%, -50%);
+  text-align: center;
+}
+
+.label-outputs-value.regA.noUse {
+  top: 40.2%;
+  left: 45.2%;
+}
+
+.label-outputs-value.regA.use {
+  background-color: rgba(21, 255, 0, 0.774);
+  top: 40.2%;
+  left: 45.2%;
+}
+
+.label-outputs-value.regB.noUse {
+  top: 52%;
+  left: 45.2%;
+}
+
+.label-outputs-value.regB.use {
+  background-color: rgba(21, 255, 0, 0.774);
+  top: 52%;
+  left: 45.2%;
+}
+
+.label-outputs-value.ALU.noUse {
+  top: 55%;
+  left: 66.4%;
+}
+
+.label-outputs-value.ALU.use {
+  background-color: rgba(21, 255, 0, 0.774);
+  top: 55%;
+  left: 66.4%;
+}
+
+.label-outputs-value.ALU.branch {
+  background-color: rgba(255, 238, 0, 0.822);
+  top: 55%;
+  left: 66.4%;
+}
+
+.label-outputs-value.regWrite.noUse{
+  top: 78%;
+  left: 88%;
+}
+
+.label-outputs-value.regWrite.use{
+  background-color: rgba(21, 255, 0, 0.774);
+  top: 78%;
+  left: 88%;
+}
+
+.label-outputs-value.memRead.noUse {
+  top: 54%;
+  left: 88.5%;
+}
+.label-outputs-value.memRead.use {
+  background-color: rgba(21, 255, 0, 0.774);
+  top: 54%;
+  left: 88.5%;
+}
+
+.branch-condition {
+  position: absolute;
+  z-index: 50;
+  font-size: 0.8vw;
+  font-weight: bold;
+  top: 59%;
+  left: 66.4%;
+  transform: translate(0%, -50%);
+}
+.branch-condition.success {
+  color: green;
+}
+.branch-condition.failure {
+  color: red;
+}
