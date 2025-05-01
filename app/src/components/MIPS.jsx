@@ -144,21 +144,42 @@ const MIPS = () => {
 function executeMIPSInstruction(instruction, registers, memory, PC) {
   // Split MIPS instruction into operation and operands
   const [op, ...operands] = instruction.split(" ");
-  // Implement execution logic for each MIPS operation
+  // Implement execution logic for each MIPS operation: in order
   switch (op) {
     case "add": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] + registers[rt];
       break;
     }
-    case "sub": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] - registers[rt];
+    case "addi": {
+      const [rs, rt, immediate] = operands;
+      if (immediate[0] == "0"){
+        immediate = '0000000000000000' + immediate;
+      } else {
+        immediate = '1111111111111111' + immediate;
+      }
+      registers[rt] = registers[rs] + parseInt(immediate);
       break;
     }
-    case "slt": {
+    case "addiu": {
+      const [rs, rt, immediate] = operands;
+      if (immediate[0] == "0"){
+        immediate = '0000000000000000' + immediate;
+      } else {
+        immediate = '1111111111111111' + immediate;
+      }
+      registers[rt] = registers[rs] + parseInt(immediate);
+      break;
+    }
+    case "addu": {
       const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
+      registers[rd] = registers[rs] + registers[rt];
+      break;
+    }
+    case "andi": {
+      const [rs, rt, immediate] = operands;
+      immediate = '0000000000000000' + immediate;
+      registers[rt] = registers[rs] & parseInt(immediate);
       break;
     }
     case "and": {
@@ -166,18 +187,56 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       registers[rd] = registers[rs] & registers[rt];
       break;
     }
-    case "or": {
-      const [rd, rs, rt] = operands;
-      registers[rd] = registers[rs] | registers[rt];
+    case "beq": {
+      const [rs, rt, offset] = operands;
+      if (registers[rs] === registers[rt]) {
+        return PC + 1 + parseInt(offset);
+      }
       break;
     }
-    case "addi": {
-      const [rd, rs, immediate] = operands;
-      registers[rd] = registers[rs] + parseInt(immediate);
+    case "bne": {
+      const [rs, rt, offset] = operands;
+      if (registers[rs] !== registers[rt]) {
+        return PC + 1 + parseInt(offset);
+      }
       break;
     }
-    case "lw": {
-      const [rt, rs, offset] = operands;
+    case "j": {
+      const [target] = operands;
+      return parseInt(target);
+    }
+    case "jal": {
+      const [target] = operands;
+      registers["ra"] = PC + 1;
+      return parseInt(target);
+    }
+    case "jr": {
+      const [rs] = operands;
+      return registers[rs];
+    }
+    case "lbu": {
+      const [rs, rt, offset] = operands;
+      
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        registers[rt] = memory[address] & 0xFF;
+      } else {
+        console.error("Memory address not found:", address);
+      }
+      break;
+    }
+    case "lhu": {
+      const [rs, rt, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        registers[rt] = memory[address] & 0xFFFF;
+      } else {
+        console.error("Memory address not found:", address);
+      }
+      break;
+    }
+    case "ll": {
+      const [rs, rt, offset] = operands;
       const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address];
@@ -186,28 +245,116 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       }
       break;
     }
-    case "sw": {
-      const [rt, rs, offset] = operands;
+    case "lui": {
+      const [rt, immediate] = operands;
+      registers[rt] = parseInt(immediate) << 16;
+      break;
+    }
+    case "lw": {
+      const [rs, rt, offset] = operands;
       const address = registers[rs] + parseInt(offset);
-      memory[address] = registers[rt];
-      break;
-    }
-    case "j": {
-      const [address] = operands;
-      return parseInt(address); 
-    }
-    case "beq": {
-      const [rs, rt, offset] = operands;
-      if (registers[rs] === registers[rt]) {
-        return PC + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        registers[rt] = memory[address];
+      } else {
+        console.error("Memory address not found:", address);
       }
       break;
     }
-    case "bne": {
+    case "nor": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = ~(registers[rs] | registers[rt]);
+      break;
+    }
+    case "or": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = registers[rs] | registers[rt];
+      break;
+    }
+    case "ori": {
+      const [rs, rt, immediate] = operands;
+      registers[rt] = registers[rs] | parseInt(immediate);
+      break;
+    }
+    case "slt": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
+      break;
+    }
+    case "slti": {
+      const [rt, rs, immediate] = operands;
+      registers[rt] = registers[rs] < parseInt(immediate) ? 1 : 0;
+      break;
+    }
+    case "sltiu": {
+      const [rt, rs, immediate] = operands;
+      registers[rt] = (registers[rs] >>> 0) < (parseInt(immediate) >>> 0) ? 1 : 0;
+      break;
+    }
+    case "sltu": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = (registers[rs] >>> 0) < (registers[rt] >>> 0) ? 1 : 0;
+      break;
+    }
+    case "sll": {
+      const [rd, rt, shamt] = operands;
+      registers[rd] = registers[rt] << parseInt(shamt);
+      break;
+    }
+    case "srl": {
+      const [rd, rt, shamt] = operands;
+      registers[rd] = registers[rt] >>> parseInt(shamt);
+      break;
+    }
+    case "sb": {
       const [rs, rt, offset] = operands;
-      if (registers[rs] !== registers[rt]) {
-        return PC + parseInt(offset); 
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        memory[address] = registers[rt] & 0xFF;
+      } else {
+        console.error("Memory address not found:", address);
       }
+      break;
+    }
+    case "sc": {
+      const [rs, rt, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        memory[address] = registers[rt];
+        registers[rt] = 1;
+      } else {
+        registers[rt] = 0;
+        console.error("Memory address not found:", address);
+      }
+      break;
+    }
+    case "sh": {
+      const [rs, rt, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        memory[address] = registers[rt] & 0xFFFF;
+      } else {
+        console.error("Memory address not found:", address);
+      }
+      break;
+    }
+    case "sw": {
+      const [rs, rt, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        memory[address] = registers[rt];
+      } else {
+        console.error("Memory address not found:", address);
+      }
+      break;
+    }
+    case "sub": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = registers[rs] - registers[rt];
+      break;
+    }
+    case "subu": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = registers[rs] - registers[rt];
       break;
     }
     default: {
