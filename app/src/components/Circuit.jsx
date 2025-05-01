@@ -47,14 +47,20 @@ function decomposeInstruction(opCode, operands) {
   return [rs, rt, rd, immediate, offset];
 }
 
-function aluResultCalc(rs, rt, immediate, offset, opCode){
-  let result = "0000";
+function aluResultCalc(rs, rt, immediate, offset, opCode) {
+  // Asegurar que todos sean números
+  rs = parseInt(rs);
+  rt = parseInt(rt);
+  immediate = parseInt(immediate);
+  offset = parseInt(offset);
 
-  switch(opCode){
+  let result = 0;
+
+  switch (opCode) {
     case "and":
       result = rs & rt;
       break;
-  
+
     case "or":
       result = rs | rt;
       break;
@@ -64,7 +70,7 @@ function aluResultCalc(rs, rt, immediate, offset, opCode){
       break;
 
     case "addi":
-      result = rs + parseInt(immediate);
+      result = rs + immediate;
       break;
 
     case "sub":
@@ -75,11 +81,11 @@ function aluResultCalc(rs, rt, immediate, offset, opCode){
 
     case "lw":
     case "sw":
-      result = rs + parseInt(offset);
+      result = rs + offset;
       break;
   }
 
-  return `0x${result.toString(16).padStart(4, "0").toUpperCase()}`; // return result as the ouput string (forced to be length 4)
+  return `0x${(result & 0xFFFF).toString(16).padStart(4, "0").toUpperCase()}`; // return result as the ouput string (forced to be length 4)
 }
 
 //used to check if the beq/bne condition is met and set its content
