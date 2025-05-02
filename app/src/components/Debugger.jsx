@@ -37,8 +37,7 @@ const DebuggerInfo = ({ PC, instructions }) => {
   return (
     <div id="debugger-info">
       <p>PC: {PC}</p>
-      <p>Current instruction: {instructions[PC] ?? 'Null'}</p>
-      <p>Previous instruction: {instructions[PC - 1] ?? 'Null'}</p>
+      
     </div>
   );
 };
