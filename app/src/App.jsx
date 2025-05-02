@@ -1,14 +1,30 @@
 import React from 'react';
 import MIPS from './components/MIPS';
-import Header from './components/Header';
-import Footer from './components/Footer';
 
 function App() {
-  return <>
-    <Header />
-    <MIPS />
-    <Footer/>
-  </>
+  return (
+    <div
+      style={{
+        height: '100vh',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          overflow: 'auto',
+          padding: '0.5rem',
+          gap: '0.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <MIPS />
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

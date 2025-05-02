@@ -6,7 +6,7 @@
 .image-wrapper {
   position: relative;
   display: inline-block;
-  width: 100%;
+  width: 60%;  /* Reducir el tamaño de la imagen */
 }
 
 .image-wrapper img {
@@ -18,7 +18,7 @@
 .register-value {
   position: absolute;
   z-index: 50;
-  font-size: 1vw; 
+  font-size: 0.5vw;  /* Reducir el tamaño de la fuente */
 }
 
 .register-value.t0 {
