@@ -6,6 +6,8 @@ import RAMtable from "./RAMtable";
 import REGISTERtable from "./REGISTERtable";
 import CircuitImage from './Circuit';
 
+// Initial state for registers and memory
+// The registers are variables used to store data temporarily during the execution of a program.
 const initialRegisters = {
   zero: 0, at: 0, v0: 0, v1: 0,
   a0: 0, a1: 0, a2: 0, a3: 0,
@@ -153,22 +155,20 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "addi": {
       const [rs, rt, immediate] = operands;
-      if (immediate[0] == "0"){
-        immediate = '0000000000000000' + immediate;
-      } else {
-        immediate = '1111111111111111' + immediate;
-      }
-      registers[rt] = registers[rs] + parseInt(immediate);
+      const immediate2 = parseInt(immediate, 10); // Convertir a número (base 10)
+      const isNegative = (immediate2 & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtended = isNegative ? immediate2 | 0xFFFF0000 : immediate2; // si el num es neg, rellena con 0 gracias al or(|), si no, el relleno con 0's es auto
+      registers[rt] = registers[rs] + signExtended;
+      //registers[rt] = registers[rs] + parseInt(immediate);
       break;
     }
     case "addiu": {
       const [rs, rt, immediate] = operands;
-      if (immediate[0] == "0"){
-        immediate = '0000000000000000' + immediate;
-      } else {
-        immediate = '1111111111111111' + immediate;
-      }
-      registers[rt] = registers[rs] + parseInt(immediate);
+      const immediate2 = parseInt(immediate, 10); // Convertir a número (base 10)
+      const isNegative = (immediate2 & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtended = isNegative ? immediate2 | 0xFFFF0000 : immediate2; // si el num es neg, rellena con 0 gracias al or(|), si no, el relleno con 0's es auto
+      registers[rt] = registers[rs] + signExtended;
+      //registers[rt] = registers[rs] + parseInt(immediate);
       break;
     }
     case "addu": {
@@ -178,8 +178,10 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "andi": {
       const [rs, rt, immediate] = operands;
-      immediate = '0000000000000000' + immediate;
-      registers[rt] = registers[rs] & parseInt(immediate);
+      const immediateInt = parseInt(immediate, 10);  // Convertir el inmediato a número (base 10)
+      const zeroExtended = immediateInt & 0xFFFF;      // Fuerza a 16 bits (extensión con 0s)
+      registers[rt] = registers[rs] & zeroExtended;
+      //registers[rt] = registers[rs] & parseInt(immediate);
       break;
     }
     case "and": {
@@ -216,7 +218,6 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "lbu": {
       const [rs, rt, offset] = operands;
-      
       const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address] & 0xFF;
@@ -246,7 +247,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       break;
     }
     case "lui": {
-      const [rt, immediate] = operands;
+      const [, rt, immediate] = operands;
       registers[rt] = parseInt(immediate) << 16;
       break;
     }
@@ -281,12 +282,12 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       break;
     }
     case "slti": {
-      const [rt, rs, immediate] = operands;
+      const [rs, rt, immediate] = operands;
       registers[rt] = registers[rs] < parseInt(immediate) ? 1 : 0;
       break;
     }
     case "sltiu": {
-      const [rt, rs, immediate] = operands;
+      const [rs, rt, immediate] = operands;
       registers[rt] = (registers[rs] >>> 0) < (parseInt(immediate) >>> 0) ? 1 : 0;
       break;
     }

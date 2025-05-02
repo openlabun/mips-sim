@@ -27,9 +27,8 @@ export function hexToBinary(hex) {
     return binary;
 }
 
-
-
 // Supports all Core Instructions
+// https://booksite.elsevier.com/9780124077263/downloads/COD_5e_Greencard.pdf
 export function translateInstructionToMIPS(hexInstruction) {
     console.log("hexInstruction", hexInstruction);
     const opcodeMap = {
@@ -81,6 +80,8 @@ export function translateInstructionToMIPS(hexInstruction) {
         "100011": "subu",
     };
 
+    // Map of register binary codes to MIPS register names
+    // Note: The register names are based on the MIPS architecture
     const regMap = {
         "00000": "zero",
         "00001": "at",
@@ -184,7 +185,8 @@ export function translateInstructionToMIPS(hexInstruction) {
         mipsInstruction += rd + " " + rt + " " + shamt;
 
     } else if (["jr"].includes(opcodeMIPS)) {
-        const rs = regMap[binaryinstruction.slice(6, 11)];
+        // R-type instruction: jump register
+        const rs = regMap[binaryInstruction.slice(6, 11)];
         if (!rs) return "Invalid Registers";
         mipsInstruction += rs;
 
