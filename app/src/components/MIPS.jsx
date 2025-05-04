@@ -124,7 +124,7 @@ const MIPS = () => {
           Simulate MIPS
         </button>
       </div>
-      <CircuitImage currentInstruction={currentInstruction} registers={registers} />
+      <CircuitImage currentInstruction={currentInstruction} registers={registers} memory={memory} />
       <div className="bottom-section">
         <RAMtable memory={memory} />
         <Debugger
