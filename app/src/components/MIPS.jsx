@@ -129,6 +129,7 @@ const MIPS = () => {
 
   return (
     <div>
+      <CircuitImage currentInstruction={currentInstruction} registers={registers} />
       <div className="row-container">
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
         <textarea
@@ -146,9 +147,12 @@ const MIPS = () => {
           Simulate MIPS
         </button>
       </div>
-      <CircuitImage currentInstruction={currentInstruction} registers={registers} />
+      
       <div className="bottom-section">
         <RAMtable memory={memory} />
+        
+        <REGISTERtable registers={registers} />
+
         <Debugger
           PC={PC}
           simulateMIPS={simulateMIPS}
@@ -157,7 +161,6 @@ const MIPS = () => {
           stepBackMIPS={stepBackMIPS}
           resetMIPS={resetMIPS}
         />
-        <REGISTERtable registers={registers} />
       </div>
     </div>
   );
