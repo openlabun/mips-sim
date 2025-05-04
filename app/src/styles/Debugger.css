@@ -67,3 +67,11 @@
     font-weight: 400;
     border: 2px solid #688288;
 }
+
+.rotate-left-90 {
+    transform: rotate(-90deg);
+}
+
+.rotate-right-90 {
+    transform: rotate(90deg);
+}

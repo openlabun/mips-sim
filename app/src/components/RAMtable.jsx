@@ -13,13 +13,16 @@ const RAMtable = ({ memory }) => {
         </thead>
         <tbody>
           {Object.keys(memory)
-            .filter(addr => parseInt(addr) <= 0xF)
-            .map((addr) => (
-              <tr key={addr} className='values'>
-                <td>{`0x${parseInt(addr).toString(16).toUpperCase()}`}</td>
-                <td>{`0x${memory[addr].toString(16).toUpperCase()}`}</td>
-              </tr>
-            ))}
+            .filter((addr) => Number.parseInt(addr) <= 0xf)
+            .map((addr) => {
+              const isZero = memory[addr] === 0
+              return (
+                <tr key={addr} className="values">
+                  <td>{`0x${Number.parseInt(addr).toString(16).toUpperCase()}`}</td>
+                  <td className={isZero ? "zero-value" : ""}>{`0x${memory[addr].toString(16).toUpperCase()}`}</td>
+                </tr>
+              )
+            })}
         </tbody>
       </table>
     </div>

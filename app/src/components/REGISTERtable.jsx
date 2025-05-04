@@ -12,12 +12,15 @@ const REGISTERtable = ({ registers}) => {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(registers).map((reg) => (
-            <tr key={reg} className='values'>
-              <td>{reg}</td>
-              <td>{`0x${registers[reg].toString(16).toUpperCase()}`}</td>
-            </tr>
-          ))}
+          {Object.keys(registers).map((reg) => {
+            const isZero = registers[reg] === 0
+            return (
+              <tr key={reg} className="values">
+                <td>{reg}</td>
+                <td className={isZero ? "zero-value" : ""}>{`0x${registers[reg].toString(16).toUpperCase()}`}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

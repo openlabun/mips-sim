@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Debugger from "./Debugger";
 import DropArea from "./Drop";
 import "../styles/MIPS.css";
@@ -49,45 +49,65 @@ const MIPS = () => {
 
     const newRegisters = { ...initialRegisters };
     const newMemory = { ...initialMemory };
+
+    let newHistory = [];
     let pc = 0;
 
     while (pc < hexInstructions.length) {
-      const newPC = executeMIPSInstruction(hexInstructions[pc], newRegisters, newMemory, pc);
+      const newPC = executeMIPSInstruction(hexInstructions[pc], newRegisters, newMemory, pc, newHistory, false);
       if (newPC !== undefined) {
         pc = newPC;
       } else {
         pc += 1;
       }
     }
-
-  updateTables(newRegisters, newMemory);
+    setPC(pc);
+    setHistory(newHistory);
+    updateTables(newRegisters, newMemory);
   };
 
   const stepMIPS = () => {
     const instructions = mipsInput.trim().split("\n");
-    if (PC >= instructions.length) return;
-    setHistory([
-      ...history,
-      { PC, registers: { ...registers }, memory: { ...memory } },
-    ]);
-  
+    if (PC >= instructions.length) {
+      setPC(0);
+      updateTables(initialRegisters, initialMemory);
+      setHistory([
+        ...history,
+        { PC, registers: { ...registers }, memory: { ...memory } },
+      ]);
+      return;
+    }
+
     const newRegisters = { ...registers };
     const newMemory = { ...memory };
-    const newPC = executeMIPSInstruction(instructions[PC], newRegisters, newMemory, PC);
+    const newPC = executeMIPSInstruction(instructions[PC], newRegisters, newMemory, PC, history);
   
     if (newPC !== undefined) {
       console.log(newPC);
       setPC(newPC);
-
-    }else {
+    } else {
       setPC(PC + 1);
     }
   
     updateTables(newRegisters, newMemory);
+    setHistory([
+      ...history,
+      { PC, registers: { ...registers }, memory: { ...memory } },
+    ]);
   };
 
   const stepBackMIPS = () => {
-    if (PC === 0) return;
+    if (PC === 0){
+      const lastHistoryIndex = history.length - 1;
+      const lastState = history[lastHistoryIndex];
+      if (lastState) {
+        setPC(lastState.PC);
+        setRegisters(lastState.registers);
+        setMemory(lastState.memory);
+        setHistory(history.slice(0, lastHistoryIndex));
+      }
+      return;
+    }
 
     const lastHistoryIndex = history.length - 1;
     const lastState = history[lastHistoryIndex];
@@ -143,7 +163,7 @@ const MIPS = () => {
   );
 };
 
-function executeMIPSInstruction(instruction, registers, memory, PC) {
+function executeMIPSInstruction(instruction, registers, memory, PC, history, sw = 1) {
   // Split MIPS instruction into operation and operands
   const [op, ...operands] = instruction.split(" ");
   // Implement execution logic for each MIPS operation: in order
@@ -155,20 +175,16 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "addi": {
       const [rs, rt, immediate] = operands;
-      const immediate2 = parseInt(immediate, 10); // Convertir a número (base 10)
-      const isNegative = (immediate2 & 0x8000) !== 0; // Verifica el bit 15 (signo)
-      const signExtended = isNegative ? immediate2 | 0xFFFF0000 : immediate2; // si el num es neg, rellena con 0 gracias al or(|), si no, el relleno con 0's es auto
-      registers[rt] = registers[rs] + signExtended;
-      //registers[rt] = registers[rs] + parseInt(immediate);
+      const isNegative = (immediate & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtended = isNegative ? immediate | 0xFFFF0000 : immediate; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      registers[rt] = registers[rs] + parseInt(signExtended);
       break;
     }
     case "addiu": {
       const [rs, rt, immediate] = operands;
-      const immediate2 = parseInt(immediate, 10); // Convertir a número (base 10)
-      const isNegative = (immediate2 & 0x8000) !== 0; // Verifica el bit 15 (signo)
-      const signExtended = isNegative ? immediate2 | 0xFFFF0000 : immediate2; // si el num es neg, rellena con 0 gracias al or(|), si no, el relleno con 0's es auto
-      registers[rt] = registers[rs] + signExtended;
-      //registers[rt] = registers[rs] + parseInt(immediate);
+      const isNegative = (immediate & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtended = isNegative ? immediate | 0xFFFF0000 : immediate; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      registers[rt] = registers[rs] + parseInt(signExtended);
       break;
     }
     case "addu": {
@@ -176,17 +192,14 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       registers[rd] = registers[rs] + registers[rt];
       break;
     }
-    case "andi": {
-      const [rs, rt, immediate] = operands;
-      const immediateInt = parseInt(immediate, 10);  // Convertir el inmediato a número (base 10)
-      const zeroExtended = immediateInt & 0xFFFF;      // Fuerza a 16 bits (extensión con 0s)
-      registers[rt] = registers[rs] & zeroExtended;
-      //registers[rt] = registers[rs] & parseInt(immediate);
-      break;
-    }
     case "and": {
       const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] & registers[rt];
+      break;
+    }
+    case "andi": {
+      const [rs, rt, immediate] = operands;
+      registers[rt] = registers[rs] & parseInt(immediate);
       break;
     }
     case "beq": {
@@ -209,7 +222,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "jal": {
       const [target] = operands;
-      registers["ra"] = PC + 1;
+      registers["ra"] = PC + 2;
       return parseInt(target);
     }
     case "jr": {
@@ -218,7 +231,9 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "lbu": {
       const [rs, rt, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
+      const isNegative = (offset & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtendedOffset = isNegative ? offset | 0xFFFF0000 : offset; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      const address = registers[rs] + parseInt(signExtendedOffset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address] & 0xFF;
       } else {
@@ -228,7 +243,9 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "lhu": {
       const [rs, rt, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
+      const isNegative = (offset & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtendedOffset = isNegative ? offset | 0xFFFF0000 : offset; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      const address = registers[rs] + parseInt(signExtendedOffset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address] & 0xFFFF;
       } else {
@@ -238,7 +255,9 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "ll": {
       const [rs, rt, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
+      const isNegative = (offset & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtendedOffset = isNegative ? offset | 0xFFFF0000 : offset; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      const address = registers[rs] + parseInt(signExtendedOffset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address];
       } else {
@@ -248,12 +267,14 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "lui": {
       const [, rt, immediate] = operands;
-      registers[rt] = parseInt(immediate) << 16;
+      registers[rt] = immediate << 16;
       break;
     }
     case "lw": {
       const [rs, rt, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
+      const isNegative = (offset & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtendedOffset = isNegative ? offset | 0xFFFF0000 : offset; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      const address = registers[rs] + parseInt(signExtendedOffset);
       if (memory.hasOwnProperty(address)) {
         registers[rt] = memory[address];
       } else {
@@ -318,7 +339,9 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "sc": {
       const [rs, rt, offset] = operands;
-      const address = registers[rs] + parseInt(offset);
+      const isNegative = (offset & 0x8000) !== 0; // Verifica el bit 15 (signo)
+      const signExtendedOffset = isNegative ? offset | 0xFFFF0000 : offset; // si el num es neg, rellena con 1 gracias al or(|), si no, el relleno con 0's es auto
+      const address = registers[rs] + parseInt(signExtendedOffset);
       if (memory.hasOwnProperty(address)) {
         memory[address] = registers[rt];
         registers[rt] = 1;
@@ -362,6 +385,9 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       console.error("Unsupported operation:", op);
       break;
     }
+  }
+  if (sw == 0){
+  history.push({ PC, registers: { ...registers }, memory: { ...memory } });
   }
 }
 
