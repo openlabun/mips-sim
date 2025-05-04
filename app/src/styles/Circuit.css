@@ -74,30 +74,45 @@
 
 .pc-value {
   top: 58%;
-  left: 10.9%;
-  background-color: #FFA9A9;
+  left: 10.7%;
+  background-color: #6bd0be;
+  border-radius: 0;
+  color: black;
+  font-weight: normal;
 }
 
 .visualization-value {
   top: 50%;
-  left: 64.5%;
-  background-color: #FEDE8A;
+  left: 64.3%;
+  background-color: #fdde8c;
+  border-radius: 0;
+  color: black;
+  font-weight: normal;
 }
 
 .memoryOuts-value {
   top: 48.7%;
-  left: 84.5%;
-  background-color: #1e1a59;
+  left: 84%;
+  background-color: #787890;
+  border-radius: 0;
+  color: black;
+  font-weight: normal;
 }
 
 .regA-value {
-  top: 28.7%;
+  top: 27.7%;
   left: 33.4%;
-  background-color: #00D3F3;
+  background-color: #96ba96;
+  border-radius: 0;
+  color: black;
+  font-weight: normal;
 }
 
 .regB-value {
-  top: 33.7%;
+  top: 33.6%;
   left: 33.4%;
-  background-color: #009689;
+  background-color: #96ba96;
+  border-radius: 0;
+  color: black;
+  font-weight: normal;
 }
