@@ -15,6 +15,8 @@ const initialRegisters = {
   s4: 0, s5: 0, s6: 0, s7: 0,
   t8: 0, t9: 0, k0: 0, k1: 0,
   gp: 0, sp: 0, fp: 0, ra: 0,
+  lo: 0,
+  hi: 0,
 };
 
 const initialMemory = Array.from({ length: 32 }).reduce(
@@ -145,6 +147,9 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
   // Split MIPS instruction into operation and operands
   const [op, ...operands] = instruction.split(" ");
   // Implement execution logic for each MIPS operation
+  console.log("Executing instruction:", instruction);
+  console.log("PC:", PC);
+  console.log("operands:", operands);
   switch (op) {
     case "add": {
       const [rd, rs, rt] = operands;
@@ -208,6 +213,69 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       if (registers[rs] !== registers[rt]) {
         return PC + parseInt(offset); 
       }
+      break;
+    }
+    case "addiu": {
+      const [rt, rs, immediate] = operands;
+      registers[rt] = registers[rs] + parseInt(immediate);
+      break;
+    }
+    case "jal": {
+      const [address] = operands;
+      registers["ra"] = PC + 1;
+      return parseInt(address);
+    }
+    case "ll": {
+      const [rt, rs, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      if (memory.hasOwnProperty(address)) {
+        registers[rt] = memory[address];
+      } else {
+        console.error("Memory address not found:", address);
+      }
+      break;
+    }
+    case "slti": {
+      const [rd, rs, immediate] = operands;
+      registers[rd] = registers[rs] < parseInt(immediate) ? 1 : 0;
+      break;
+    }
+    case "subu": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = (registers[rs] - registers[rt]) >>> 0; // sin overflow
+      break;
+    }
+    case "divu": {
+      const [rs, rt] = operands;
+      if (registers[rt] === 0) {
+        console.error("Division by zero");
+        break;
+      }
+      registers["lo"] = Math.floor(registers[rs] / registers[rt]) >>> 0;
+      registers["hi"] = (registers[rs] % registers[rt]) >>> 0;
+      break;
+    } 
+    case "mult": {
+      registers["lo"] = 0;
+      registers["hi"] = 0;
+      const [rs, rt] = operands;
+      const result = BigInt(registers[rs]) * BigInt(registers[rt]);
+      console.log("Result of multiplication:", result);
+      registers["lo"] = Number(result & BigInt(0xFFFFFFFF));
+      registers["hi"] = Number((result >> BigInt(32)) & BigInt(0xFFFFFFFF));
+      break;
+    }
+    case "ble": {
+      const [rs, rt, offset] = operands;
+      if (registers[rs] <= registers[rt]) {
+        return parseInt(offset);
+      }
+      break;
+    }
+    case "srl": {
+      const [rd, rt, sa] = operands;
+      const shiftAmount = parseInt(sa);
+      registers[rd] = (registers[rt] >>> shiftAmount) & 0xFFFFFFFF;
       break;
     }
     default: {
