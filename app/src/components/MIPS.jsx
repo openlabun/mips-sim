@@ -332,7 +332,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC, history, sw 
       break;
     }
     case "sb": {
-      const [rt, rs, offset] = operands;
+      const [rs, rt, offset] = operands;
       const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         memory[address] = registers[rt] & 0xFF;
@@ -356,7 +356,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC, history, sw 
       break;
     }
     case "sh": {
-      const [rt, rs, offset] = operands;
+      const [rs, rt, offset] = operands;
       const address = registers[rs] + parseInt(offset);
       if (memory.hasOwnProperty(address)) {
         memory[address] = registers[rt] & 0xFFFF;
