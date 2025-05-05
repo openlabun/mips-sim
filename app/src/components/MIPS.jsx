@@ -99,14 +99,9 @@ const MIPS = () => {
 
   const stepBackMIPS = () => {
     if (PC === 0){
-      const lastHistoryIndex = history.length - 1;
-      const lastState = history[lastHistoryIndex];
-      if (lastState) {
-        setPC(lastState.PC);
-        setRegisters(lastState.registers);
-        setMemory(lastState.memory);
-        setHistory(history.slice(0, lastHistoryIndex));
-      }
+      setPC(0);
+      setRegisters(initialRegisters);
+      setMemory(initialMemory);
       return;
     }
 
@@ -191,7 +186,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC, history, sw 
       break;
     }
     case "addu": {
-      const [rt, rs, rd] = operands;
+      const [rd, rs, rt] = operands;
       registers[rd] = registers[rs] + registers[rt];
       break;
     }
