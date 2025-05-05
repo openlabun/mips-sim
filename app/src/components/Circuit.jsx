@@ -19,7 +19,7 @@ const instructionImages = {
   j: jumpImage,
 };
 
-const CircuitImage = ({ currentInstruction, registers }) => {
+const CircuitImage = ({ currentInstruction, registers, PC, visualization, memoryOut }) => {
   const [opName] = currentInstruction.trim().split(' ');
   const imageSrc = instructionImages[opName] || defaultImage;
 
@@ -27,6 +27,13 @@ const CircuitImage = ({ currentInstruction, registers }) => {
     <div className="circuit-container">
       <div className="image-wrapper">
         <img src={imageSrc} alt={`Circuito para ${opName}`} />
+
+        <div className='value pc-value'>0x{PC.toString(16)}</div>
+        <div className='value visualization-value'>0x{visualization.aluResult ? visualization.aluResult.toString(16) : 0}</div>
+        <div className='value memoryOuts-value'>{memoryOut.toString(16)}</div>
+        <div className='value regA-value'>0x{visualization.regA ? visualization.regA.toString(16) : 0}</div>
+        <div className='value regB-value'>0x{visualization.regB ? visualization.regB.toString(16) : 0}</div>
+
         {['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'].map((reg) => (
           <div key={reg} className={`register-value ${reg}`}>
             {`0x${registers[reg].toString(16).toUpperCase()}`}
