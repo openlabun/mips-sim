@@ -3,8 +3,8 @@ import Debugger from "./Debugger";
 import DropArea from "./Drop";
 import "../styles/MIPS.css";
 import RAMtable from "./RAMtable";
-import REGISTERtable from "./REGISTERtable";
 import CircuitImage from './Circuit';
+import RegisterTabs from "./RegisterTabs";
 
 const initialRegisters = {
   zero: 0, at: 0, v0: 0, v1: 0,
@@ -21,7 +21,8 @@ const initialRegisters = {
   f0: 0.0, f1: 0.0, f2: 0.0, f3: 0.0, f4: 0.0, f5: 0.0, f6: 0.0, f7: 0.0,
   f8: 0.0, f9: 0.0, f10: 0.0, f11: 0.0, f12: 0.0, f13: 0.0, f14: 0.0, f15: 0.0,
   f16: 0.0, f17: 0.0, f18: 0.0, f19: 0.0, f20: 0.0, f21: 0.0, f22: 0.0, f23: 0.0,
-  f24: 0.0, f25: 0.0, f26: 0.0, f27: 0.0, f28: 0.0, f29: 0.0, f30: 0.0, f31: 0.0
+  f24: 0.0, f25: 0.0, f26: 0.0, f27: 0.0, f28: 0.0, f29: 0.0, f30: 0.0, f31: 0.0,
+  status: 0, Cause: 0, EPC: 0,
 };
 
 const initialMemory = Array.from({ length: 32 }).reduce(
@@ -77,6 +78,7 @@ const MIPS = () => {
     ]);
   
     const newRegisters = { ...registers };
+    console.log("newRegisters", newRegisters);
     const newMemory = { ...memory };
     const newPC = executeMIPSInstruction(instructions[PC], newRegisters, newMemory, PC);
   
@@ -115,34 +117,32 @@ const MIPS = () => {
   return (
     <div>
       <div className="row-container">
-        <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
-        <textarea
-          id="mips-input"
-          className="input-text-area"
-          placeholder="Enter MIPS instructions here..."
-          value={mipsInput}
-          onChange={(e) => setMipsInput(e.target.value)}
-        />
-        <button
-          id="simulate-mips-button"
-          className="btnSimulate"
-          onClick={simulateMIPS}
-        >
-          Simulate MIPS
-        </button>
+        <div id="input-section" className="input-section">
+          <textarea
+            id="mips-input"
+            className="input-text-area"
+            placeholder="Enter MIPS instructions here..."
+            value={mipsInput}
+            onChange={(e) => setMipsInput(e.target.value)}
+          />
+          <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
+        </div>
+        <div className="bottom-section">
+          <Debugger
+            PC={PC}
+            simulateMIPS={simulateMIPS}
+            mipsInput={mipsInput}
+            stepMIPS={stepMIPS}
+            stepBackMIPS={stepBackMIPS}
+            resetMIPS={resetMIPS}
+          />
+          <RAMtable memory={memory} />
+          {/* <REGISTERtable registers={registers} /> */}
+          <RegisterTabs registers={registers} />
+        </div>
       </div>
-      <div className="bottom-section">
-        <RAMtable memory={memory} />
-        <Debugger
-          PC={PC}
-          simulateMIPS={simulateMIPS}
-          mipsInput={mipsInput}
-          stepMIPS={stepMIPS}
-          stepBackMIPS={stepBackMIPS}
-          resetMIPS={resetMIPS}
-        />
-        <REGISTERtable registers={registers} />
-      <CircuitImage currentInstruction={currentInstruction} registers={registers} />
+      <div className="">
+        <CircuitImage currentInstruction={currentInstruction} registers={registers} />
       </div>
     </div>
   );
@@ -261,7 +261,7 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
     }
     case "subu": {
       const [rd, rs, rt] = operands;
-      registers[rd] = (registers[rs] - registers[rt]) >>> 0; // sin overflow
+      registers[rd] = (registers[rs] - registers[rt]) >>> 0;
       break;
     }
     case "divu": {
@@ -320,23 +320,6 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       break;
     }
 
-    case "mul.d": {
-      const [fd, fs, ft] = operands;
-    
-      const left = parseFloat(registers[fs]); // asume que f2 = 3.0
-      const right = parseFloat(registers[ft]); // asume que f2 = 3.0
-    
-      const result = left * right; // 9.0
-    
-      registers[fd] = result; // f4 = 9.0
-    
-      console.log(`${fd} = ${result}, HEX: ${float64ToHex(result)}`);
-      break;
-    } //DEPURAR ESTA INSTRUCCION, esta fallando 
-
-    
-    
-
     case "c.eq.d":
     case "c.lt.d":
     case "c.le.d": {
@@ -349,9 +332,209 @@ function executeMIPSInstruction(instruction, registers, memory, PC) {
       if (op === "c.lt.d") conditionMet = valFs < valFt;
       if (op === "c.le.d") conditionMet = valFs <= valFt;
 
-      registers["fcc"] = conditionMet ? 1 : 0; // o usar un flag separado si lo manejas
+      registers["fcc"] = conditionMet ? 1 : 0;
       break;
     }
+
+    case "andi": {
+      const [rt, rs, immediate] = operands;
+      registers[rt] = registers[rs] & parseInt(immediate);
+      console.log("ANDI result:", registers[rt]);
+      break;
+    }
+
+    case "ori": {
+      const [rt, rs, immediate] = operands;
+      registers[rt] = registers[rs] | parseInt(immediate);
+      break;
+    }
+
+    case "lhu": {
+      const [rt, rs, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      registers[rt] = (memory[address] ?? 0) & 0xFFFF;
+      break;
+    }
+    case "sll": {
+      const [rd, rt, shamt] = operands;
+      registers[rd] = registers[rt] << parseInt(shamt);
+      break;
+    }
+    case "sh": {
+      const [rt, rs, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      memory[address] = registers[rt] & 0xFFFF;
+      break;
+    }
+
+    case "div": {
+      const [rs, rt] = operands;
+      if (registers[rt] !== 0) {
+        registers["lo"] = Math.floor(registers[rs] / registers[rt]);
+        registers["hi"] = registers[rs] % registers[rt];
+      } else {
+        console.error("Division by zero error");
+      }
+      break;
+    }
+    case "c.eq.s":
+    case "c.lt.s":
+    case "c.le.s": {
+      const [fs, ft] = operands;
+      let condition = false;
+      if (op === "c.eq.s") condition = registers[fs] === registers[ft];
+      if (op === "c.lt.s") condition = registers[fs] < registers[ft];
+      if (op === "c.le.s") condition = registers[fs] <= registers[ft];
+      registers["FPcond"] = condition ? 1 : 0;
+      break;
+    }
+    case "mul.s": {
+      const [fd, fs, ft] = operands;
+      registers[fd] = registers[fs] * registers[ft];
+      break;
+    }
+    case "lwc1": {
+      const [rt, rs, offset] = operands;
+      const address = registers[rs] + parseInt(offset);
+      registers[rt] = memory[address] ?? 0;
+      break;
+    }
+    case "mfc0": {
+      const [rd, rs] = operands;
+      if (registers.hasOwnProperty(rs)) {
+        registers[rd] = registers[rs];
+      } else {
+        console.error(`Control register ${rs} not found`);
+      }
+      break;
+    }
+
+    case "addu": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = (registers[rs] + registers[rt]) >>> 0;
+      break;
+    }
+
+    case "nor": {
+        const [rd, rs, rt] = operands;
+        registers[rd] = (~registers[rs] & ~registers[rt]) >>> 0;
+        break;
+    }
+
+    case "sltu": {
+      const [rd, rs, rt] = operands;
+      registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
+      break;
+    }
+
+    case "lbu": {
+        const [rt, rs, offset] = operands;
+        const address = registers[rs] + parseInt(offset);
+        registers[rt] = (memory[address] ?? 0) >>> 0;
+        break;
+    }
+
+    case "sc": {
+        const [rt, rs, offset] = operands;
+        const address = registers[rs] + parseInt(offset);
+        memory[address] = registers[rt] == 1 ? 1 : 0;
+        break;
+    }
+
+    case "bclf": {
+        const [offset] = operands;
+        if (registers["fcc"] === 0) {
+          const branchAddr = PC + 1 + parseInt(offset); 
+          return branchAddr;
+        }
+        break;
+    }
+
+    case "mflo": {
+        const [rd] = operands;
+        registers[rd] = 0;
+        break;
+    }
+
+      case "blt": {
+        const [rs, rt, offset] = operands;
+        if (registers[rs] >= registers[rt]) {
+      const branchAddr = PC + 1 + parseInt(offset); 
+          return branchAddr;
+        }
+        break;
+      }
+    
+    case "li": {
+        const [rd, immediate] = operands;
+        registers[rd] = parseInt(immediate);
+        break;
+    }
+
+    case "bclt": {
+      const [offset] = operands;
+      if (registers["fcc"] === 1) {
+        const branchAddr = PC + 1 + parseInt(offset); 
+        return branchAddr;
+      }
+      break;
+    }
+    
+    case "add.s": {
+      const [fd, fs, ft] = operands;
+      registers[fd] = parseFloat(registers[fs] || 0) + parseFloat(registers[ft] || 0);
+      break;
+    }
+    
+    case "sub.s": {
+      const [fd, fs, ft] = operands;
+      registers[fd] = parseFloat(registers[fs] || 0) - parseFloat(registers[ft] || 0);
+      break;
+    }
+    
+    case "div.s": {
+      const [fd, fs, ft] = operands;
+      const denominator = parseFloat(registers[ft] || 0);
+      if (denominator === 0) {
+        console.error("Floating-point division by zero");
+        registers[fd] = NaN;
+      } else {
+        registers[fd] = parseFloat(registers[fs] || 0) / denominator;
+      }
+      break;
+    }
+    
+    case "mfhi": {
+      const [rd] = operands;
+      registers[rd] = registers["hi"] || 0;
+      break;
+    }
+    
+    case "lui": {
+      const [rt, immediate] = operands;
+      registers[rt] = parseInt(immediate) << 16; // R[rt] = {imm, 16'b0}
+      break;
+    }
+    
+    case "sltiu": {
+      const [rt, rs, immediate] = operands;
+    
+      // Sign-extend the immediate
+      let imm = parseInt(immediate);
+      if (imm & 0x8000) imm |= 0xFFFF0000; // sign extend if highest bit is 1
+    
+      // Perform unsigned comparison
+      registers[rt] = (registers[rs] >>> 0) < (imm >>> 0) ? 1 : 0;
+    
+      break;
+    }
+
+    case "jr": {
+      const [rs] = operands;
+      console.log("Jumping to address in register:", registers[rs]);
+      return parseInt(registers[rs]);
+    }
+
     default: {
       console.error("Unsupported operation:", op);
       break;

@@ -16,9 +16,19 @@
     gap: 1rem;
 }
 
+.input-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* margin-top: 2rem; */
+    gap: 1rem;
+    padding-left: 1rem;
+}
+
 .input-text-area {
-    width: 55%;
-    height: 14rem;
+    width: 90%;
+    height: 25rem;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 0.5rem 0.8rem;
