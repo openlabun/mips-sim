@@ -1,6 +1,8 @@
 .circuit-container {
   text-align: center;
-  margin: 1rem 0;
+  
+  max-width: 80%;
+  margin: 0 auto;
 }
 
 .image-wrapper {

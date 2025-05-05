@@ -1,0 +1,53 @@
+.code-editor {
+  position: relative;
+  width: 55%;
+  height: 14rem;
+  display: flex;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #f9f9f9;
+}
+
+.code-editor:focus-within {
+  border-color: #3c8191;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.line-numbers {
+  width: 40px;
+  background-color: #e8e8e8;
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  user-select: none;
+}
+
+.line-numbers pre {
+  margin: 0;
+  padding: 0.5rem 0.3rem;
+  text-align: right;
+  color: #666;
+  font-family: "Montserrat", monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.code-textarea {
+  flex: 1;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  font-family: "Montserrat", monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: none;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+}
+
+/* Estilo para resaltar palabras clave de MIPS */
+.code-textarea::selection {
+  background-color: #b3d4fc;
+}

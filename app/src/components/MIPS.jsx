@@ -5,6 +5,7 @@ import "../styles/MIPS.css";
 import RAMtable from "./RAMtable";
 import REGISTERtable from "./REGISTERtable";
 import CircuitImage from './Circuit';
+import CodeEditor from "./CodeEditor";
 
 // Initial state for registers and memory
 // The registers are variables used to store data temporarily during the execution of a program.
@@ -132,12 +133,10 @@ const MIPS = () => {
       <CircuitImage currentInstruction={currentInstruction} registers={registers} />
       <div className="row-container">
         <DropArea setMipsInput={setMipsInput} setHexInput={setHexInput} />
-        <textarea
-          id="mips-input"
-          className="input-text-area"
-          placeholder="Enter MIPS instructions here..."
+        <CodeEditor
           value={mipsInput}
           onChange={(e) => setMipsInput(e.target.value)}
+          placeholder="Enter MIPS instructions here..."
         />
         {/*<button
           id="simulate-mips-button"
