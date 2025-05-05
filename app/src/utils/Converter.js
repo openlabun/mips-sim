@@ -142,12 +142,12 @@ export function translateInstructionToMIPS(hexInstruction) {
         
     } else if (["lw", "sw", "lbu", "lhu", "ll", "sb", "sh", "sc"].includes(opcodeMIPS)) {
         // I-type instruction: memory operation
-        const rt = regMap[binaryInstruction.slice(6, 11)];
-        const rs = regMap[binaryInstruction.slice(11, 16)];
+        const base = regMap[binaryInstruction.slice(6, 11)];
+        const rt = regMap[binaryInstruction.slice(11, 16)];
         const offset = binaryInstruction.slice(16, 32);
         console.log('lw, sw offset ', binaryToHex(offset));
-        if (!rt || !rs || isNaN(offset)) return "Invalid Syntax";
-        mipsInstruction += rs + " " + rt + " " + binaryToHex(offset);
+        if (!base || !rt || isNaN(offset)) return "Invalid Syntax";
+        mipsInstruction += rt + " " + base + " " + binaryToHex(offset);
 
     } else if (["addi", "addiu", "lui", "andi", "ori", "slti", "sltiu"].includes(opcodeMIPS)) {
         // I-type instruction: arithmetic/logical immediate
@@ -159,7 +159,7 @@ export function translateInstructionToMIPS(hexInstruction) {
         console.log('immediate formated ', binaryToHex(binaryInstruction.slice(16, 32)));
         const immediate = binaryToHex(binaryInstruction.slice(16, 32));
         if (!rt || !rs || !immediate) return "Invalid Syntax";
-        mipsInstruction += rs + " " + rt + " " + immediate;
+        mipsInstruction += rt + " " + rs + " " + parseInt(immediate);
 
     } else if (["beq", "bne"].includes(opcodeMIPS)) {
         // I-type instruction: branch instruction
