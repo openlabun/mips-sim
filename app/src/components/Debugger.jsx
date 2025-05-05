@@ -21,7 +21,7 @@ const ControlButtons = ({ simulateMIPS, stepMIPS, stepBackMIPS, resetMIPS }) => 
             </g>
           </svg>
         </button>
-        <span className="button-label">reset</span>
+        <span className="button-label">Reset</span>
       </div>
       
       <div className="button-container">
@@ -30,7 +30,7 @@ const ControlButtons = ({ simulateMIPS, stepMIPS, stepBackMIPS, resetMIPS }) => 
             <path fill="#f8f8f8" d="M8 5v14l11-7z" />
           </svg>
         </button>
-        <span className="button-label">play</span>
+        <span className="button-label">Execute</span>
       </div>
 
       <div className="button-container">
@@ -49,7 +49,7 @@ const ControlButtons = ({ simulateMIPS, stepMIPS, stepBackMIPS, resetMIPS }) => 
             />
           </svg>
         </button>
-        <span className="button-label">prev.</span>
+        <span className="button-label">Prev</span>
       </div>
 
       <div className="button-container">
@@ -68,7 +68,7 @@ const ControlButtons = ({ simulateMIPS, stepMIPS, stepBackMIPS, resetMIPS }) => 
             />
           </svg>
         </button>
-        <span className="button-label">next</span>
+        <span className="button-label">Next</span>
       </div>
 
     </div>
@@ -78,9 +78,9 @@ const ControlButtons = ({ simulateMIPS, stepMIPS, stepBackMIPS, resetMIPS }) => 
 const DebuggerInfo = ({ PC, instructions }) => {
   return (
     <div id="debugger-info">
-      <p>PC: {PC}</p>
-      <p>Next instruction: {instructions[PC] ?? 'Null'}</p>
-      <p>Previous instruction: {instructions[PC - 1] ?? 'Null'}</p>
+      <p><strong>PC:</strong> {PC}</p>
+      <p><strong>Next instruction:</strong> {instructions[PC] ?? 'null'}</p>
+      <p><strong>Previous instruction:</strong> {instructions[PC - 1] ?? 'null'}</p>
     </div>
   );
 };
