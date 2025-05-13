@@ -28,7 +28,7 @@
     font-size: 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s, box-shadow 0.3s;
-    font-family: 'Montserrat', serif; 
+    font-family: 'Lucida Console'; 
 }
 
 .input-text-area:focus {
@@ -61,7 +61,7 @@
     margin: 2rem;
 }
 
-.btnSimulate {
+/* .btnSimulate {
     border: 2px solid #24b4fb;
     background-color: #24b4fb;
     border-radius: 0.9em;
@@ -75,5 +75,5 @@
 
 .btnSimulate:hover {
     background-color: #2d95df;
-}
+} */
 

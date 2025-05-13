@@ -10,24 +10,31 @@
     border-radius: 8px;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
     border: 2px solid #688288;
-}
-
-.Debugger h2 {
+  }
+  
+  .Debugger h2 {
     display: block;
     width: fit-content;
     margin: 10px auto;
     font-size: 1.5rem;
     color: #3a7b8b;
-}
-
-.control-buttons {
+  }
+  
+  .control-buttons {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     margin-top: 1rem;
-}
-
-.control-buttons button {
+  }
+  
+  /* New styles for button containers */
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .control-buttons button {
     padding: 10px;
     background-color: #24b4fb;
     border: 2px solid #24b4fb;
@@ -39,26 +46,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.control-buttons button:hover {
+    margin-bottom: 4px; /* Add space between button and label */
+  }
+  
+  .control-buttons button:hover {
     background-color: #2d95df;
-}
-
-.control-buttons svg {
+  }
+  
+  .control-buttons svg {
     width: 24px;
     height: 24px;
-}
-
-#debugger-info {
+  }
+  
+  /* New style for button labels */
+  .button-label {
+    font-size: 11px;
+    color: #3a7b8b;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  #debugger-info {
     margin-top: 1rem;
     font-size: 1rem;
     color: #333;
-    
-
-}
-
-#debugger-info p {
+  }
+  
+  #debugger-info p {
     margin: 0.5rem 0;
     border-radius: 8px;
     padding: 0.5rem;
@@ -66,4 +80,13 @@
     color: #3a7b8b;
     font-weight: 400;
     border: 2px solid #688288;
-}
+  }
+  
+  .rotate-left-90 {
+    transform: rotate(-90deg);
+  }
+  
+  .rotate-right-90 {
+    transform: rotate(90deg);
+  }
+  
